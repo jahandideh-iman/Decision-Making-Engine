@@ -1,0 +1,4 @@
+- Process AI Logic : Process The inner logic of AI with fake input and output
+- Provide visual editor : provide a visual editor for creating and editing AI logics
+- Connect Output to the game: Connect logic output to the real actions in the game
+- Connect Input to the game : Connect logic input to the real input from the game
