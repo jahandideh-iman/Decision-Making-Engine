@@ -3,8 +3,8 @@
 
 FiniteStateComponent::FiniteStateComponent()
 {
-	state = "";
 	currentState = "";
+	initialState = "";
 
 	stateEntryAction = nullptr;
 	stateAction = nullptr;
@@ -17,18 +17,16 @@ FiniteStateComponent::~FiniteStateComponent()
 
 void FiniteStateComponent::AddState(StateName state)
 {
-	this->state = state;
-}
+	if (initialState == "")
+		initialState = state;
 
-StateName FiniteStateComponent::GetState()
-{
-	return state;
+	states.emplace(state,state);
 }
 
 void FiniteStateComponent::Update()
 {
-	if (currentState != state)
-		ChangeState();
+	if (currentState != initialState)
+		GoToState(initialState);
 	if (stateAction != nullptr)
 		stateAction();
 }
@@ -43,7 +41,7 @@ void FiniteStateComponent::SetStateEntryAction(StateName sate, function<void()> 
 	stateEntryAction = entryAction;
 }
 
-void FiniteStateComponent::ChangeState()
+void FiniteStateComponent::GoToState(StateName state)
 {
 	currentState = state;
 	if (stateEntryAction != nullptr)
@@ -53,4 +51,14 @@ void FiniteStateComponent::ChangeState()
 void FiniteStateComponent::SetStateAction(StateName theOnlyState, function<void() > action)
 {
 	stateAction = action;
+}
+
+bool FiniteStateComponent::HasState(StateName state)
+{
+	return states.find(state)!= states.end();
+}
+
+bool FiniteStateComponent::HasNoState()
+{
+	return states.empty();
 }

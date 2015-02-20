@@ -1,5 +1,4 @@
 #include "CppUTest/TestHarness.h"
-#include "AIManager.h"
 #include "FiniteStateComponent.h"
 
 TEST_GROUP(FiniteStateComponentWithOneState)
@@ -15,18 +14,16 @@ TEST_GROUP(FiniteStateComponentWithOneState)
 
 };
 
-TEST(FiniteStateComponentWithOneState, StateIsEmptyOnCreation)
+TEST(FiniteStateComponentWithOneState, HasNoStateOnCreation)
 {
-	CHECK_EQUAL("", component.GetState());
+	CHECK_TRUE(component.HasNoState());
 }
 
-TEST(FiniteStateComponentWithOneState, StateDoesNotChangeAfterTick)
+TEST(FiniteStateComponentWithOneState, HasStatesAfterAddingState)
 {
 	component.AddState(theOnlyState);
-	
-	component.Update();
 
-	CHECK_EQUAL(theOnlyState, component.GetCurrentState());
+	CHECK_FALSE(component.HasNoState());
 }
 
 TEST(FiniteStateComponentWithOneState, CurrentStateIsEmptyOnCreation)
@@ -35,6 +32,26 @@ TEST(FiniteStateComponentWithOneState, CurrentStateIsEmptyOnCreation)
 
 	CHECK_EQUAL("", component.GetCurrentState());
 }
+
+TEST(FiniteStateComponentWithOneState, CurrentStateIsTheOnlyStateAfterFirstUpdate)
+{
+	component.AddState(theOnlyState);
+
+	component.Update();
+
+	CHECK_EQUAL(theOnlyState, component.GetCurrentState());
+}
+
+TEST(FiniteStateComponentWithOneState, StateDoesNotChangeAfterTick)
+{
+	component.AddState(theOnlyState);
+	
+	CallMultipleUpdate(5);
+
+	CHECK_EQUAL(theOnlyState, component.GetCurrentState());
+}
+
+
 
 TEST(FiniteStateComponentWithOneState, ExecuteTheEntryActionOnFirstUpdate)
 {
