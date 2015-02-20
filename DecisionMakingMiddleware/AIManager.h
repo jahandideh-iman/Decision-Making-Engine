@@ -10,6 +10,6 @@ public:
 
 	void AddComponent(FiniteStateComponent component);
 
-	void Tick();
+	void Update();
 };
 

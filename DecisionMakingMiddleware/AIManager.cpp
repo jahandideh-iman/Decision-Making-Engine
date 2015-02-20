@@ -15,7 +15,7 @@ void AIManager::AddComponent(FiniteStateComponent component)
 
 }
 
-void AIManager::Tick()
+void AIManager::Update()
 {
 
 }

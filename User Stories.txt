@@ -2,3 +2,5 @@
 - Provide visual editor : provide a visual editor for creating and editing AI logics
 - Connect Output to the game: Connect logic output to the real actions in the game
 - Connect Input to the game : Connect logic input to the real input from the game
+- Read Logic In RealTime : Read and Load AI Logic by reading from a file in real time
+- Support Scripting : Support scripting in the logic file
