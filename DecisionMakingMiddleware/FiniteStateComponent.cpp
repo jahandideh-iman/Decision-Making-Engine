@@ -3,11 +3,8 @@
 
 FiniteStateComponent::FiniteStateComponent()
 {
-	currentState = "";
-	initialState = "";
-
-	stateEntryAction = nullptr;
-	stateAction = nullptr;
+	initialStateName = "";
+	currentState = nullptr;
 }
 
 
@@ -15,50 +12,122 @@ FiniteStateComponent::~FiniteStateComponent()
 {
 }
 
-void FiniteStateComponent::AddState(StateName state)
+void FiniteStateComponent::AddState(StateName stateName)
 {
-	if (initialState == "")
-		initialState = state;
-
-	states.emplace(state,state);
+	states.emplace(stateName,  State(stateName));
 }
 
 void FiniteStateComponent::Update()
 {
-	if (currentState != initialState)
-		GoToState(initialState);
-	if (stateAction != nullptr)
-		stateAction();
+	ProcessCurrentStateTransitions();
+	CallLoopingActionFor(currentState);
 }
 
-StateName FiniteStateComponent::GetCurrentState()
+bool FiniteStateComponent::IsTheFirstUpdate()
 {
-	return currentState;
+	return currentState == nullptr;
+}
+void FiniteStateComponent::ProcessCurrentStateTransitions()
+{
+	if (IsTheFirstUpdate())
+	{
+		GoToState(&states[initialStateName]);
+		return;
+	}
+		
+	for (const StateTransition& t : currentState->transitions)
+	{
+		if (t.query() == true)
+		{
+			GoToState(t.destinationState);
+			break;
+		}
+	}
+
 }
 
-void FiniteStateComponent::SetStateEntryAction(StateName sate, function<void()> entryAction)
+void FiniteStateComponent::GoToState(State* newState)
 {
-	stateEntryAction = entryAction;
+	CallExitActionFor(currentState);
+
+	currentState = newState;
+	
+	CallEntryActionFor(newState);
 }
 
-void FiniteStateComponent::GoToState(StateName state)
+void FiniteStateComponent::CallExitActionFor(State* state)
 {
-	currentState = state;
-	if (stateEntryAction != nullptr)
-		stateEntryAction();
+	if (state != nullptr)
+	{
+		if (state->exitAction != nullptr)
+			state->exitAction();
+	}
 }
 
-void FiniteStateComponent::SetStateAction(StateName theOnlyState, function<void() > action)
+void FiniteStateComponent::CallEntryActionFor(State* state)
 {
-	stateAction = action;
+	if (state != nullptr)
+	{
+		if (state->entryAction != nullptr)
+			state->entryAction();
+	}
 }
 
-bool FiniteStateComponent::HasState(StateName state)
+void FiniteStateComponent::CallLoopingActionFor(State* state)
 {
-	return states.find(state)!= states.end();
+	if (state != nullptr)
+	{
+		if (state->loopingAction != nullptr)
+			state->loopingAction();
+	}
+}
+
+StateName FiniteStateComponent::GetCurrentStateName()
+{
+	if (currentState == nullptr)
+		return "";
+	return currentState->name;
+}
+
+void FiniteStateComponent::SetStateEntryAction(StateName stateName, StateAction action)
+{
+	states[stateName].entryAction = action;
+}
+
+void FiniteStateComponent::SetStateLoopingAction(StateName stateName, StateAction action)
+{
+	states[stateName].loopingAction = action;
+}
+
+void FiniteStateComponent::SetStateExitAction(StateName stateName, StateAction action)
+{
+	states[stateName].exitAction = action;
+}
+
+bool FiniteStateComponent::HasState(StateName stateName)
+{
+	return states.find(stateName) != states.end();
 }
 
 bool FiniteStateComponent::HasNoState()
 {
 	return states.empty();
 }
+
+
+//TODO: Find a way to make it only be set on creation
+void FiniteStateComponent::SetInitialState(StateName stateName)
+{
+	initialStateName = stateName;
+}
+
+void FiniteStateComponent::SetTransition(StateName from, StateName to, ConditionQuery query)
+{
+	states[from].transitions.emplace_back(StateTransition(&states[to], query));
+}
+
+
+
+
+
+

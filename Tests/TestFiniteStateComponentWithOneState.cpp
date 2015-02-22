@@ -12,6 +12,17 @@ TEST_GROUP(FiniteStateComponentWithOneState)
 			component.Update();
 	}
 
+	void AddStateAndSetInitialState(StateName stateName)
+	{
+		component.AddState(stateName);
+		component.SetInitialState(stateName);
+	}
+
+	void CheckCurrentStateNameIs(StateName stateName)
+	{
+		CHECK_EQUAL(stateName, component.GetCurrentStateName());
+	}
+
 };
 
 TEST(FiniteStateComponentWithOneState, HasNoStateOnCreation)
@@ -30,25 +41,24 @@ TEST(FiniteStateComponentWithOneState, CurrentStateIsEmptyOnCreation)
 {
 	component.AddState(theOnlyState);
 
-	CHECK_EQUAL("", component.GetCurrentState());
+	CheckCurrentStateNameIs("");
 }
 
 TEST(FiniteStateComponentWithOneState, CurrentStateIsTheOnlyStateAfterFirstUpdate)
 {
-	component.AddState(theOnlyState);
-
+	AddStateAndSetInitialState(theOnlyState);
 	component.Update();
 
-	CHECK_EQUAL(theOnlyState, component.GetCurrentState());
+	CheckCurrentStateNameIs(theOnlyState);
 }
 
 TEST(FiniteStateComponentWithOneState, StateDoesNotChangeAfterTick)
 {
-	component.AddState(theOnlyState);
+	AddStateAndSetInitialState(theOnlyState);
 	
 	CallMultipleUpdate(5);
 
-	CHECK_EQUAL(theOnlyState, component.GetCurrentState());
+	CheckCurrentStateNameIs(theOnlyState);
 }
 
 
@@ -56,7 +66,7 @@ TEST(FiniteStateComponentWithOneState, StateDoesNotChangeAfterTick)
 TEST(FiniteStateComponentWithOneState, ExecuteTheEntryActionOnFirstUpdate)
 {
 	bool isExecuted = false;
-	component.AddState(theOnlyState);
+	AddStateAndSetInitialState(theOnlyState);
 	component.SetStateEntryAction(theOnlyState, [&]()->void{isExecuted = true; });
 
 	component.Update();
@@ -69,7 +79,7 @@ TEST(FiniteStateComponentWithOneState, ExecuteTheEntryActionOnlyOnce)
 	auto actionCallCount = 0u;
 	auto arbitrary = 4u;
 
-	component.AddState(theOnlyState);
+	AddStateAndSetInitialState(theOnlyState);
 	component.SetStateEntryAction(theOnlyState, [&]()->void{ ++actionCallCount; });
 
 	CallMultipleUpdate(arbitrary);
@@ -82,8 +92,8 @@ TEST(FiniteStateComponentWithOneState, ExecuteTheStateActionOnEachUpdate)
 	auto actionCallCount = 0u;
 	auto numberOfUpdateCalls = 4u;
 
-	component.AddState(theOnlyState);
-	component.SetStateAction(theOnlyState, [&]()->void{ ++actionCallCount; });
+	AddStateAndSetInitialState(theOnlyState);
+	component.SetStateLoopingAction(theOnlyState, [&]()->void{ ++actionCallCount; });
 
 	CallMultipleUpdate(numberOfUpdateCalls);
 
