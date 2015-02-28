@@ -64,7 +64,7 @@ TEST(FiniteStateComponentWithMultipleStates, StateIsChangedWhenTransitionConditi
 	CheckCurrentStateNameIs(secondState);
 }
 
-TEST(FiniteStateComponentWithMultipleStates, StateIsNotChangedAfterFirstUpdate)
+TEST(FiniteStateComponentWithMultipleStates, StateIsSetToInitialStateOnFirstUpdate)
 {
 	component.SetTransition(firstState, secondState, []()->bool{return true; });
 

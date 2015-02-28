@@ -54,7 +54,6 @@ private:
 
 	typedef map<StateName, State> StateContainer;
 
-
 public:
 	FiniteStateComponent();
 	~FiniteStateComponent();
