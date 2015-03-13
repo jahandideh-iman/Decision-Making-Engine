@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include "AIComponent.h"
 
 using std::function;
 using std::map;
@@ -13,7 +14,7 @@ using std::vector;
 typedef string StateName;
 
 
-class FiniteStateComponent
+class FiniteStateComponent : public AIComponent
 {
 private:
 
@@ -58,9 +59,7 @@ public:
 	FiniteStateComponent();
 	~FiniteStateComponent();
 
-	void Update();
-
-
+	void Update(float dt = 0) override;
 
 	void AddState(StateName stateName);
 	void SetInitialState(StateName stateName);

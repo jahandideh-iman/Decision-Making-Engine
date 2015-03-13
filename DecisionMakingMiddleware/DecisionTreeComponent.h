@@ -1,15 +1,16 @@
 #pragma once
 
 #include "DecisionTreeNode.h"
+#include "AIComponent.h"
 
 
-class DecisionTreeComponent
+class DecisionTreeComponent : public AIComponent
 {
 public:
 	DecisionTreeComponent();
 	~DecisionTreeComponent();
 
-	void Update();
+	void Update(float dt = 0) override;
 
 	void SetRoot(DecisionTreeNode* root);
 

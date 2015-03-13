@@ -4,7 +4,7 @@
 #include "DecisionNode.h"
 
 
-TEST_GROUP(TestDecisionTreeComponent)
+TEST_GROUP(DecisionTreeComponent)
 {
 	DecisionTreeComponent component;
 
@@ -15,12 +15,12 @@ TEST_GROUP(TestDecisionTreeComponent)
 	}
 };
 
-TEST(TestDecisionTreeComponent, IsEmptyOnCreation)
+TEST(DecisionTreeComponent, IsEmptyOnCreation)
 {
 	CHECK_TRUE(component.IsEmpty());
 }
 
-TEST(TestDecisionTreeComponent, IsNotEmptyAfterSettingRoot)
+TEST(DecisionTreeComponent, IsNotEmptyAfterSettingRoot)
 {
 	DecisionNode node;
 
@@ -29,7 +29,7 @@ TEST(TestDecisionTreeComponent, IsNotEmptyAfterSettingRoot)
 	CHECK_FALSE(component.IsEmpty());
 }
 
-TEST(TestDecisionTreeComponent, RootIsExecutedOnUpdateIfItIsAnActionNode)
+TEST(DecisionTreeComponent, RootIsExecutedOnUpdateIfItIsAnActionNode)
 {
 	auto callCount = 0u;
 	ActionNode actionNode([&]()->void{++callCount; });
@@ -40,7 +40,7 @@ TEST(TestDecisionTreeComponent, RootIsExecutedOnUpdateIfItIsAnActionNode)
 	CHECK_EQUAL(5, callCount);
 }
 
-TEST(TestDecisionTreeComponent, TruePathIsExecutedOnUpdateIfNodeConditionIsMet)
+TEST(DecisionTreeComponent, TruePathIsExecutedOnUpdateIfNodeConditionIsMet)
 {
 	auto callCount = 0u;
 
@@ -53,7 +53,7 @@ TEST(TestDecisionTreeComponent, TruePathIsExecutedOnUpdateIfNodeConditionIsMet)
 	CHECK_EQUAL(5, callCount);
 }
 
-TEST(TestDecisionTreeComponent, FalsePathIsExecutedOnUpdateIfNodeConditionIsNotMet)
+TEST(DecisionTreeComponent, FalsePathIsExecutedOnUpdateIfNodeConditionIsNotMet)
 {
 	auto callCount = 0u;
 
@@ -66,7 +66,7 @@ TEST(TestDecisionTreeComponent, FalsePathIsExecutedOnUpdateIfNodeConditionIsNotM
 	CHECK_EQUAL(5, callCount);
 }
 
-TEST(TestDecisionTreeComponent, CompatibilityTest)
+TEST(DecisionTreeComponent, CompatibilityTest)
 {
 	auto callCount = 0u;
 	ActionNode actionNode([&]()->void{++callCount; });

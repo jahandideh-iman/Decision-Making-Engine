@@ -17,7 +17,7 @@ void FiniteStateComponent::AddState(StateName stateName)
 	states.emplace(stateName,  State(stateName));
 }
 
-void FiniteStateComponent::Update()
+void FiniteStateComponent::Update(float dt)
 {
 	ProcessCurrentStateTransitions();
 	CallLoopingActionFor(currentState);

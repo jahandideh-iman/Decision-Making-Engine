@@ -20,7 +20,7 @@ void DecisionTreeComponent::SetRoot(DecisionTreeNode* root)
 	this->root = root;
 }
 
-void DecisionTreeComponent::Update()
+void DecisionTreeComponent::Update(float dt)
 {
 	root->ProcessNode();
 }
