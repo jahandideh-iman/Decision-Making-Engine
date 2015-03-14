@@ -2,6 +2,9 @@
 
 #include "cocos2d.h"
 #include "Player.h"
+#include "DMEManager.h"
+#include "FSMEnemy.h"
+#include "DecisionTreeEnemey.h"
 
 using namespace cocos2d;
 
@@ -21,21 +24,24 @@ public:
 	// Here's a difference. Method 'init' in cocos2d-x returns bool, instead of returning 'id' in cocos2d-iphone
 	virtual bool init();
 
-	void InitialPlayer(Size &visibleSize, Vec2 &origin);
-
-	void InititalBackground(Size &visibleSize, Vec2 &origin);
-
-	void InitialKeyboardListener();
-
-
-	// a selector callback
 	void menuCloseCallback(cocos2d::Ref* pSender);
 
-	// implement the "static create()" method manually
+	void update(float dt) override;
+
 	CREATE_FUNC(Game);
 
 	static cocos2d::Scene* createScene();
+
 private:
-	Player * player = nullptr;
+	void InitialPlayer(Size &visibleSize, Vec2 &origin);
+	void InitialEnemies(Size &visibleSize, Vec2 &origin);
+
+	void InititalBackground(Size &visibleSize, Vec2 &origin);
+	void InitialKeyboardListener();
+
+private:
+	Player* player = nullptr;
+	FSMEnemy* fsmEnemy = nullptr;
+	DecisionTreeEnemey* daEnemey = nullptr;
 };
 

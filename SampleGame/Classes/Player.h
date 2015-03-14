@@ -5,7 +5,7 @@
 
 using namespace cocos2d;
 
-#define SPEED 80
+#define SPEED 100
 
 class Player : public CCSprite
 {

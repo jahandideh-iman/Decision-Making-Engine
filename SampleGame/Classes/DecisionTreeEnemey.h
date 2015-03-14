@@ -1,27 +1,26 @@
 #pragma once
 
 #include "cocos2d.h"
-#include "FiniteStateMachineComponent.h"
-#include "DMEUtilities.h"
-#include "DMEManager.h"
 #include "Player.h"
+#include "DecisionTreeComponent.h"
+#include "DMEUtilities.h"
+#include "ActionNode.h"
+#include "DecisionNode.h"
+#include "DMEManager.h"
 
 using namespace cocos2d;
 
 #define ENEMEY_SPEED 60
 
-
-class FSMEnemy : public CCSprite
+class DecisionTreeEnemey : public CCSprite
 {
 public:
 
-	static FSMEnemy* Create(CCPoint initialPos, Player* player);
-
-	FSMEnemy();
-	~FSMEnemy();
+	static DecisionTreeEnemey* Create(CCPoint initialPos, Player* player);
+	DecisionTreeEnemey();
+	~DecisionTreeEnemey();
 
 	bool IsPlayerInRange();
-	bool IsPlayerOutOfRange();
 	void SearchForPlayer(float dt);
 	void FollowPlayer(float dt);
 

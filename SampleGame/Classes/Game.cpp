@@ -35,8 +35,13 @@ bool Game::init()
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	InitialPlayer(visibleSize, origin);
+	this->schedule(schedule_selector(Game::update));
+
 	InititalBackground(visibleSize, origin);
+	InitialPlayer(visibleSize, origin);
+	InitialEnemies(visibleSize, origin);
+
+	//NOTE: This must be after player initialization
 	InitialKeyboardListener();
 
 	return true;
@@ -119,11 +124,27 @@ void Game::InititalBackground(Size &visibleSize, Vec2 &origin)
 	// add the sprite as a child to this layer
 	this->addChild(background, -100);
 
-	InitialKeyboardListener();
 }
 
 void Game::InitialPlayer(Size &visibleSize, Vec2 &origin)
 {
 	player = Player::CreatePlayer(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
-	this->addChild(player);
+	this->addChild(player,50);
 }
+
+void Game::InitialEnemies(Size &visibleSize, Vec2 &origin)
+{
+	fsmEnemy = FSMEnemy::Create(Vec2( 0.2 * visibleSize.width , visibleSize.height / 2 + origin.y), player);
+	this->addChild(fsmEnemy);
+
+	daEnemey = DecisionTreeEnemey::Create(Vec2(0.8 * visibleSize.width, visibleSize.height / 2 + origin.y), player);
+	this->addChild(daEnemey);
+}
+
+void Game::update(float dt)
+{
+	DMEManager::Get()->Update(dt);
+}
+
+
+
