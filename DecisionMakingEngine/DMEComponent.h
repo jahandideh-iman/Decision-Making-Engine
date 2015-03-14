@@ -1,9 +1,9 @@
 #pragma once
-class AIComponent
+class DMEComponent
 {
 public:
-	AIComponent();
-	~AIComponent();
+	DMEComponent(){};
+	~DMEComponent(){};
 
 	virtual void Update(float dt) = 0;
 };

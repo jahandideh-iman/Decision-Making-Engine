@@ -2,6 +2,8 @@
 #include "DecisionTreeNode.h"
 #include <functional>
 
+#include "DMEDefines.h"
+
 using std::function;
 
 
@@ -9,20 +11,18 @@ using std::function;
 class DecisionNode :
 	public DecisionTreeNode
 {
-	typedef function<bool()> Query;
-
 public:
-	DecisionNode(Query query = nullptr, DecisionTreeNode* truePathNode = nullptr, DecisionTreeNode* falsePathNode = nullptr);
+	DecisionNode(DME::Query query = nullptr, DecisionTreeNode* truePathNode = nullptr, DecisionTreeNode* falsePathNode = nullptr);
 	~DecisionNode();
 
-	void ProcessNode() override;
+	void ProcessNode(float dt) override;
 
 	void SetTruePathNode(DecisionTreeNode* node);
 	void SetFalsePathNode(DecisionTreeNode* node);
-	void SetQuery(Query query);
+	void SetQuery(DME::Query query);
 private:
 	DecisionTreeNode* truePathNode = nullptr;
 	DecisionTreeNode* falsePathNode = nullptr;
-	Query query = nullptr;
+	DME::Query query = nullptr;
 };
 

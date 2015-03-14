@@ -1,9 +1,20 @@
 #include "CppUTest/TestHarness.h"
-#include "FiniteStateComponent.h"
+#include "FiniteStateMachineComponent.h"
+#include "DMEUtilities.h"
+
+
+class GameObjectMock
+{
+
+public:
+	void EntryAction(){ isEntryActionCalled = true; }
+public:
+	bool isEntryActionCalled = false;
+};
 
 TEST_GROUP(FiniteStateComponentWithOneState)
 {
-	FiniteStateComponent component;
+	FiniteStateMachineComponent component;
 	StateName theOnlyState = "OnlyState";
 
 	void CallMultipleUpdate(unsigned numberOfTimes)
@@ -52,7 +63,7 @@ TEST(FiniteStateComponentWithOneState, CurrentStateIsTheOnlyStateAfterFirstUpdat
 	CheckCurrentStateNameIs(theOnlyState);
 }
 
-TEST(FiniteStateComponentWithOneState, StateDoesNotChangeAfterTick)
+TEST(FiniteStateComponentWithOneState, StateIsNotChangeAfterTick)
 {
 	AddStateAndSetInitialState(theOnlyState);
 	
@@ -63,7 +74,7 @@ TEST(FiniteStateComponentWithOneState, StateDoesNotChangeAfterTick)
 
 
 
-TEST(FiniteStateComponentWithOneState, ExecuteTheEntryActionOnFirstUpdate)
+TEST(FiniteStateComponentWithOneState, EntryActionIsExecutedOnFirstUpdate)
 {
 	bool isExecuted = false;
 	AddStateAndSetInitialState(theOnlyState);
@@ -74,7 +85,7 @@ TEST(FiniteStateComponentWithOneState, ExecuteTheEntryActionOnFirstUpdate)
 	CHECK_TRUE(isExecuted);
 }
 
-TEST(FiniteStateComponentWithOneState, ExecuteTheEntryActionOnlyOnce)
+TEST(FiniteStateComponentWithOneState, EntryActionIsExecutedOnlyOnce)
 {
 	auto actionCallCount = 0u;
 	auto arbitrary = 4u;
@@ -87,15 +98,26 @@ TEST(FiniteStateComponentWithOneState, ExecuteTheEntryActionOnlyOnce)
 	CHECK_EQUAL(1, actionCallCount);
 }
 
-TEST(FiniteStateComponentWithOneState, ExecuteTheStateActionOnEachUpdate)
+TEST(FiniteStateComponentWithOneState, UpdateActionIsExecutedOnEachUpdate)
 {
 	auto actionCallCount = 0u;
 	auto numberOfUpdateCalls = 4u;
 
 	AddStateAndSetInitialState(theOnlyState);
-	component.SetStateLoopingAction(theOnlyState, [&]()->void{ ++actionCallCount; });
+	component.SetStateUpdateAction(theOnlyState, [&](float dt)->void{ ++actionCallCount; });
 
 	CallMultipleUpdate(numberOfUpdateCalls);
 
 	CHECK_EQUAL(numberOfUpdateCalls, actionCallCount);
+}
+
+TEST(FiniteStateComponentWithOneState, AcceptMemberFunctionForAction)
+{
+	GameObjectMock object;
+	AddStateAndSetInitialState(theOnlyState);
+	component.SetStateEntryAction(theOnlyState, BIND_MEMBER_ACTION(GameObjectMock::EntryAction, &object));
+
+	component.Update();
+
+	CHECK_TRUE(object.isEntryActionCalled);
 }

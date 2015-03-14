@@ -1,9 +1,9 @@
 #include "CppUTest/TestHarness.h"
-#include "FiniteStateComponent.h"
+#include "FiniteStateMachineComponent.h"
 
 TEST_GROUP(FiniteStateComponentWithMultipleStates)
 {
-	FiniteStateComponent component;
+	FiniteStateMachineComponent component;
 	StateName firstState = "firstState";
 	StateName secondState = "secondState";
 
@@ -112,12 +112,12 @@ TEST(FiniteStateComponentWithMultipleStates, ExistActionForSourceIsCalledOnState
 	CHECK_TRUE(isExecuted);
 }
 
-TEST(FiniteStateComponentWithMultipleStates, LoopingActionIsCallOnEachUpdateAfterTransition)
+TEST(FiniteStateComponentWithMultipleStates, UpdateActionIsCallOnEachUpdateAfterTransition)
 {
 	auto callCount = 0u;
 
 	component.SetTransition(firstState, secondState, []()->bool{return true; });
-	component.SetStateLoopingAction(secondState, [&]()->void{++callCount; });
+	component.SetStateUpdateAction(secondState, [&](float dt)->void{++callCount; });
 
 	//On first Update component will go to initial state
 	component.Update();

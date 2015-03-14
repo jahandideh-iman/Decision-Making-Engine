@@ -1,7 +1,7 @@
 #include "DecisionNode.h"
 
 
-DecisionNode::DecisionNode(Query query, DecisionTreeNode* truePathNode, DecisionTreeNode* falsePathNode)
+DecisionNode::DecisionNode(DME::Query query, DecisionTreeNode* truePathNode, DecisionTreeNode* falsePathNode)
 {
 	SetQuery(query);
 	SetTruePathNode(truePathNode);
@@ -13,15 +13,15 @@ DecisionNode::~DecisionNode()
 {
 }
 
-void DecisionNode::ProcessNode()
+void DecisionNode::ProcessNode(float dt)
 {
 	if (query())
-		truePathNode->ProcessNode();
+		truePathNode->ProcessNode(dt);
 	else
-		falsePathNode->ProcessNode();
+		falsePathNode->ProcessNode(dt);
 }
 
-void DecisionNode::SetQuery(Query query)
+void DecisionNode::SetQuery(DME::Query query)
 {
 	this->query = query;
 }

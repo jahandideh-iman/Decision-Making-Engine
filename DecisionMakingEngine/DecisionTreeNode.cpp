@@ -9,8 +9,3 @@ DecisionTreeNode::DecisionTreeNode()
 DecisionTreeNode::~DecisionTreeNode()
 {
 }
-
-void DecisionTreeNode::ProcessNode()
-{
-
-}

@@ -1,8 +1,9 @@
 #include "DecisionTreeComponent.h"
 
 
-DecisionTreeComponent::DecisionTreeComponent()
+DecisionTreeComponent::DecisionTreeComponent(DecisionTreeNode* root)
 {
+	SetRoot(root);
 }
 
 
@@ -22,5 +23,5 @@ void DecisionTreeComponent::SetRoot(DecisionTreeNode* root)
 
 void DecisionTreeComponent::Update(float dt)
 {
-	root->ProcessNode();
+	root->ProcessNode(dt);
 }

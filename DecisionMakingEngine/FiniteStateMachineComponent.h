@@ -1,54 +1,50 @@
 #pragma once
 
-#include <functional>
 #include <map>
 #include <string>
 #include <vector>
-#include "AIComponent.h"
+#include "DMEComponent.h"
+#include "DMEDefines.h"
 
-using std::function;
 using std::map;
 using std::string;
-using std::vector;
 
 typedef string StateName;
 
+using DME::Action;
+using DME::Query;
 
-class FiniteStateComponent : public AIComponent
+class FiniteStateMachineComponent : public DMEComponent
 {
 private:
-
-	typedef function<void()> StateAction;
-	typedef function<bool()> ConditionQuery;
-	
 	struct State;
 
 	struct StateTransition
 	{
-		StateTransition(State* destination, ConditionQuery query)
+		StateTransition(State* destination, Query query)
 		{
 			this->destinationState = destination;
 			this->query = query;
 		}
 
 		State* destinationState;
-		ConditionQuery query;
+		Query query;
 		
 	};
 
 	struct State
 	{
-		State(StateName name = "", StateAction entryAction = nullptr, StateAction loopingAction = nullptr)
+		State(StateName name = "", DME::Action entryAction = nullptr, DME::UpdateAction updateAction = nullptr)
 		{
 			this->name = name;
 			this->entryAction = entryAction;
-			this->loopingAction = loopingAction;
+			this->updateAction = updateAction;
 		}
 
 		StateName name;
-		StateAction entryAction;
-		StateAction loopingAction;
-		StateAction exitAction;
+		DME::Action entryAction;
+		DME::Action exitAction;
+		DME::UpdateAction updateAction;
 
 		std::vector<StateTransition> transitions;
 	};
@@ -56,19 +52,19 @@ private:
 	typedef map<StateName, State> StateContainer;
 
 public:
-	FiniteStateComponent();
-	~FiniteStateComponent();
+	FiniteStateMachineComponent();
+	~FiniteStateMachineComponent();
 
 	void Update(float dt = 0) override;
 
 	void AddState(StateName stateName);
 	void SetInitialState(StateName stateName);
 
-	void SetTransition(StateName from, StateName to, ConditionQuery condition);
+	void SetTransition(StateName from, StateName to, Query condition);
 
-	void SetStateEntryAction(StateName stateName, StateAction action);
-	void SetStateLoopingAction(StateName stateName, StateAction action);
-	void SetStateExitAction(StateName stateName, StateAction action);
+	void SetStateEntryAction(StateName stateName, DME::Action action);
+	void SetStateUpdateAction(StateName stateName, DME::UpdateAction action);
+	void SetStateExitAction(StateName stateName, DME::Action action);
 
 	StateName GetCurrentStateName();
 
@@ -81,9 +77,9 @@ private:
 
 	void CallExitActionFor(State* state);
 	void CallEntryActionFor(State* state);
-	void CallLoopingActionFor(State* state);
+	void CallUpdateActionFor(State* state, float dt);
 
-	bool FiniteStateComponent::IsTheFirstUpdate();
+	bool FiniteStateMachineComponent::IsTheFirstUpdate();
 
 
 private:

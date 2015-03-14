@@ -6,6 +6,6 @@ public:
 	DecisionTreeNode();
 	~DecisionTreeNode();
 
-	virtual void ProcessNode() = 0;
+	virtual void ProcessNode(float dt) = 0;
 };
 
