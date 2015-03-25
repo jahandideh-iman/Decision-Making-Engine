@@ -8,15 +8,16 @@
 
 using std::map;
 using std::string;
-
-typedef string StateName;
-
 using DME::Action;
 using DME::Query;
+
+typedef string StateName;
+typedef string ActionName;
 
 class FiniteStateMachineComponent : public DMEComponent
 {
 private:
+
 	struct State;
 
 	struct StateTransition
@@ -34,22 +35,26 @@ private:
 
 	struct State
 	{
-		State(StateName name = "", DME::Action entryAction = nullptr, DME::UpdateAction updateAction = nullptr)
+		State(StateName name = "", ActionName entryAction = "", ActionName updateAction = "", ActionName exitAction = "")
 		{
 			this->name = name;
 			this->entryAction = entryAction;
 			this->updateAction = updateAction;
+			this->exitAction = exitAction;
 		}
 
 		StateName name;
-		DME::Action entryAction;
-		DME::Action exitAction;
-		DME::UpdateAction updateAction;
+		ActionName entryAction;
+		ActionName exitAction;
+		ActionName updateAction;
 
 		std::vector<StateTransition> transitions;
 	};
 
+
 	typedef map<StateName, State> StateContainer;
+	typedef map<ActionName, DME::Action> ActionContainer;
+	typedef map<ActionName, DME::UpdateAction> UpdateActionContainer;
 
 public:
 	FiniteStateMachineComponent();
@@ -62,14 +67,22 @@ public:
 
 	void SetTransition(StateName from, StateName to, Query condition);
 
-	void SetStateEntryAction(StateName stateName, DME::Action action);
-	void SetStateUpdateAction(StateName stateName, DME::UpdateAction action);
-	void SetStateExitAction(StateName stateName, DME::Action action);
+	void AddAction(ActionName actionName);
+	void AddUpdateAction(ActionName actionName);
+
+	void SetUpdateActionMethod(ActionName actionName, DME::UpdateAction action);
+	void SetActionMethod(ActionName actionName, DME::Action action);
+
+	void SetStateEntryAction(StateName stateName, ActionName action);
+	void SetStateUpdateAction(StateName stateName, ActionName action);
+	void SetStateExitAction(StateName stateName, ActionName action);
 
 	StateName GetCurrentStateName();
 
 	bool HasState(StateName stateName);
 	bool HasNoState();
+
+	State* GetState(StateName stateName);
 
 private:
 	void ProcessCurrentStateTransitions();
@@ -85,6 +98,10 @@ private:
 private:
 
 	StateContainer states;
+	//TODO: find a  way to merge these two 
+	ActionContainer actions;
+	UpdateActionContainer updateActions;
+
 	State* currentState;
 	StateName initialStateName;
 

@@ -17,6 +17,12 @@ void FiniteStateMachineComponent::AddState(StateName stateName)
 	states.emplace(stateName,  State(stateName));
 }
 
+
+FiniteStateMachineComponent::State* FiniteStateMachineComponent::GetState(StateName stateName)
+{
+	return &states[stateName];
+}
+
 void FiniteStateMachineComponent::Update(float dt)
 {
 	ProcessCurrentStateTransitions();
@@ -59,8 +65,8 @@ void FiniteStateMachineComponent::CallExitActionFor(State* state)
 {
 	if (state != nullptr)
 	{
-		if (state->exitAction != nullptr)
-			state->exitAction();
+		if (state->exitAction != "")
+			actions[state->exitAction]();
 	}
 }
 
@@ -68,8 +74,8 @@ void FiniteStateMachineComponent::CallEntryActionFor(State* state)
 {
 	if (state != nullptr)
 	{
-		if (state->entryAction != nullptr)
-			state->entryAction();
+		if (state->entryAction != "")
+			actions[state->entryAction]();
 	}
 }
 
@@ -77,8 +83,8 @@ void FiniteStateMachineComponent::CallUpdateActionFor(State* state,float dt)
 {
 	if (state != nullptr)
 	{
-		if (state->updateAction != nullptr)
-			state->updateAction(dt);
+		if (state->updateAction != "")
+			updateActions[state->updateAction](dt);
 	}
 }
 
@@ -89,17 +95,17 @@ StateName FiniteStateMachineComponent::GetCurrentStateName()
 	return currentState->name;
 }
 
-void FiniteStateMachineComponent::SetStateEntryAction(StateName stateName, DME::Action action)
+void FiniteStateMachineComponent::SetStateEntryAction(StateName stateName, ActionName action)
 {
 	states[stateName].entryAction = action;
 }
 
-void FiniteStateMachineComponent::SetStateUpdateAction(StateName stateName, DME::UpdateAction action)
+void FiniteStateMachineComponent::SetStateUpdateAction(StateName stateName, ActionName action)
 {
 	states[stateName].updateAction = action;
 }
 
-void FiniteStateMachineComponent::SetStateExitAction(StateName stateName, DME::Action action)
+void FiniteStateMachineComponent::SetStateExitAction(StateName stateName, ActionName action)
 {
 	states[stateName].exitAction = action;
 }
@@ -125,6 +131,27 @@ void FiniteStateMachineComponent::SetTransition(StateName from, StateName to, Qu
 {
 	states[from].transitions.emplace_back(StateTransition(&states[to], query));
 }
+
+void FiniteStateMachineComponent::SetUpdateActionMethod(ActionName actionName, DME::UpdateAction action)
+{
+	updateActions[actionName] = action;
+}
+
+void FiniteStateMachineComponent::SetActionMethod(ActionName actionName, DME::Action action)
+{
+	actions[actionName] = action;
+}
+
+void FiniteStateMachineComponent::AddAction(ActionName actionName)
+{
+	actions[actionName] = nullptr;
+}
+
+void FiniteStateMachineComponent::AddUpdateAction(ActionName actionName)
+{
+	updateActions[actionName] = nullptr;
+}
+
 
 
 

@@ -33,11 +33,16 @@ void FSMEnemy::Initial(Player* player)
 	comp->AddState("Searching");
 	comp->AddState("Following");
 	comp->SetInitialState("Searching");
+	comp->AddUpdateAction("SearchForPlayer");
+	comp->AddUpdateAction("FollowPlayer");
+
+	comp->SetUpdateActionMethod("SearchForPlayer", BIND_MEMBER_UPDATE_ACTION(FSMEnemy::SearchForPlayer, this));
+	comp->SetUpdateActionMethod("FollowPlayer", BIND_MEMBER_UPDATE_ACTION(FSMEnemy::FollowPlayer, this));
 		
 	comp->SetTransition("Searching", "Following", BIND_MEMBER_ACTION(FSMEnemy::IsPlayerInRange, this));
 	comp->SetTransition("Following", "Searching", BIND_MEMBER_ACTION(FSMEnemy::IsPlayerOutOfRange, this));
-	comp->SetStateUpdateAction("Searching", BIND_MEMBER_UPDATE_ACTION(FSMEnemy::SearchForPlayer, this));
-	comp->SetStateUpdateAction("Following", BIND_MEMBER_UPDATE_ACTION(FSMEnemy::FollowPlayer, this));
+	comp->SetStateUpdateAction("Searching", "SearchForPlayer");
+	comp->SetStateUpdateAction("Following", "FollowPlayer");
 
 	DMEManager::Get()->AddComponent(comp);
 

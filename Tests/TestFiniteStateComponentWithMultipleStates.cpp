@@ -25,6 +25,27 @@ TEST_GROUP(FiniteStateComponentWithMultipleStates)
 			component.Update();
 	}
 
+	void SetStateEntryAction(StateName stateName, ActionName actionName, DME::Action action)
+	{
+		component.AddAction(actionName);
+		component.SetActionMethod(actionName, action);
+		component.SetStateEntryAction(stateName, actionName);
+	}
+
+	void SetStateUpdateAction(StateName stateName, ActionName actionName, DME::UpdateAction action)
+	{
+		component.AddAction(actionName);
+		component.SetUpdateActionMethod(actionName, action);
+		component.SetStateUpdateAction(stateName, actionName);
+	}
+
+	void SetStateExitAction(StateName stateName, ActionName actionName, DME::Action action)
+	{
+		component.AddAction(actionName);
+		component.SetActionMethod(actionName, action);
+		component.SetStateExitAction(stateName, actionName);
+	}
+
 
 };
 
@@ -89,7 +110,7 @@ TEST(FiniteStateComponentWithMultipleStates, EntryActionForDestinationIsCalledOn
 	bool isExecuted = false;
 
 	component.SetTransition(firstState, secondState, []()->bool{return true; });
-	component.SetStateEntryAction(secondState, [&]()->void{isExecuted = true; });
+	SetStateEntryAction(secondState, "SecondEntryAction" , [&]()->void{isExecuted = true; });
 
 	//On first Update component will go to initial state
 	component.Update();
@@ -103,7 +124,7 @@ TEST(FiniteStateComponentWithMultipleStates, ExistActionForSourceIsCalledOnState
 	bool isExecuted = false;
 
 	component.SetTransition(firstState, secondState, []()->bool{return true; });
-	component.SetStateExitAction(firstState, [&]()->void{isExecuted = true; });
+	SetStateExitAction(firstState, "FirstExitAction" ,[&]()->void{isExecuted = true; });
 
 	//On first Update component will go to initial state
 	component.Update();
@@ -117,7 +138,7 @@ TEST(FiniteStateComponentWithMultipleStates, UpdateActionIsCallOnEachUpdateAfter
 	auto callCount = 0u;
 
 	component.SetTransition(firstState, secondState, []()->bool{return true; });
-	component.SetStateUpdateAction(secondState, [&](float dt)->void{++callCount; });
+	SetStateUpdateAction(secondState, "SecondUpdateAction", [&](float dt)->void{++callCount; });
 
 	//On first Update component will go to initial state
 	component.Update();

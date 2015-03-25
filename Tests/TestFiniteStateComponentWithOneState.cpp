@@ -34,6 +34,19 @@ TEST_GROUP(FiniteStateComponentWithOneState)
 		CHECK_EQUAL(stateName, component.GetCurrentStateName());
 	}
 
+	void SetStateEntryAction(StateName stateName,ActionName actionName, DME::Action action)
+	{
+		component.AddAction(actionName);
+		component.SetActionMethod(actionName, action);
+		component.SetStateEntryAction(stateName, actionName);
+	}
+	
+	void SetStateUpdateAction(StateName stateName, ActionName actionName, DME::UpdateAction action)
+	{
+		component.AddAction(actionName);
+		component.SetUpdateActionMethod(actionName, action);
+		component.SetStateUpdateAction(stateName, actionName);
+	}
 };
 
 TEST(FiniteStateComponentWithOneState, HasNoStateOnCreation)
@@ -78,7 +91,7 @@ TEST(FiniteStateComponentWithOneState, EntryActionIsExecutedOnFirstUpdate)
 {
 	bool isExecuted = false;
 	AddStateAndSetInitialState(theOnlyState);
-	component.SetStateEntryAction(theOnlyState, [&]()->void{isExecuted = true; });
+	SetStateEntryAction(theOnlyState, "EntryActionName", [&]()->void{isExecuted = true; });
 
 	component.Update();
 
@@ -91,7 +104,7 @@ TEST(FiniteStateComponentWithOneState, EntryActionIsExecutedOnlyOnce)
 	auto arbitrary = 4u;
 
 	AddStateAndSetInitialState(theOnlyState);
-	component.SetStateEntryAction(theOnlyState, [&]()->void{ ++actionCallCount; });
+	SetStateEntryAction(theOnlyState, "EntryActionName" , [&]()->void{ ++actionCallCount; });
 
 	CallMultipleUpdate(arbitrary);
 
@@ -104,7 +117,7 @@ TEST(FiniteStateComponentWithOneState, UpdateActionIsExecutedOnEachUpdate)
 	auto numberOfUpdateCalls = 4u;
 
 	AddStateAndSetInitialState(theOnlyState);
-	component.SetStateUpdateAction(theOnlyState, [&](float dt)->void{ ++actionCallCount; });
+	SetStateUpdateAction(theOnlyState, "UpdateActionName" , [&](float dt)->void{ ++actionCallCount; });
 
 	CallMultipleUpdate(numberOfUpdateCalls);
 
@@ -115,7 +128,7 @@ TEST(FiniteStateComponentWithOneState, AcceptMemberFunctionForAction)
 {
 	GameObjectMock object;
 	AddStateAndSetInitialState(theOnlyState);
-	component.SetStateEntryAction(theOnlyState, BIND_MEMBER_ACTION(GameObjectMock::EntryAction, &object));
+	SetStateEntryAction(theOnlyState, "EntryActionName" , BIND_MEMBER_ACTION(GameObjectMock::EntryAction, &object));
 
 	component.Update();
 
