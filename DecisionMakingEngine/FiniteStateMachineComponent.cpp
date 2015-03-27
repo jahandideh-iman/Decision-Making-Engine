@@ -43,7 +43,7 @@ void FiniteStateMachineComponent::ProcessCurrentStateTransitions()
 		
 	for (const StateTransition& t : currentState->transitions)
 	{
-		if (t.query() == true)
+		if (conditions[t.conditionName]() == true)
 		{
 			GoToState(t.destinationState);
 			break;
@@ -127,9 +127,19 @@ void FiniteStateMachineComponent::SetInitialState(StateName stateName)
 	initialStateName = stateName;
 }
 
-void FiniteStateMachineComponent::SetTransition(StateName from, StateName to, Query query)
+void FiniteStateMachineComponent::AddCondition(ConditionName conditionName)
 {
-	states[from].transitions.emplace_back(StateTransition(&states[to], query));
+	conditions[conditionName] = nullptr;
+}
+
+void FiniteStateMachineComponent::AddTransition(StateName from, StateName to, ConditionName conditionName)
+{
+	states[from].transitions.emplace_back(StateTransition(&states[to], conditionName));
+}
+
+void FiniteStateMachineComponent::SetConditionMethod(ConditionName conditionName, DME::Condition condition)
+{
+	conditions[conditionName] = condition;
 }
 
 void FiniteStateMachineComponent::SetUpdateActionMethod(ActionName actionName, DME::UpdateAction action)

@@ -3,6 +3,7 @@
 #include <iostream>
 #include "rapidxml-1.13/rapidxml.hpp"
 #include "FiniteStateMachineComponent.h"
+#include "DMEUtilities.h"
 
 using namespace rapidxml;
 using namespace std;
@@ -17,29 +18,6 @@ using namespace std;
 class FiniteStateMachineParser
 {
 public:
-	class CharArrayWrapper
-	{
-	public:
-		CharArrayWrapper(std::string& str)
-		{
-			cstr = new char[str.length() + 1];
-			strcpy_s(cstr, str.length() + 1, str.c_str());
-		}
-
-		~CharArrayWrapper()
-		{
-			delete[] cstr;
-		}
-
-		char* Get()
-		{
-			return cstr;
-		}
-
-	private:
-		char *cstr = nullptr;
-	};
-public:
 
 	static FiniteStateMachineComponent* Create(std::istream &stream);
 
@@ -53,8 +31,12 @@ private:
 	static FiniteStateMachineComponent* CreateWithData(xml_node<> * rootNode);
 	static bool IsDataValid(xml_node<> * rootNode);
 	static std::string ReadData(std::istream &stream);
-	static void ParseComponentStates(FiniteStateMachineComponent* component, xml_node<> * rootNode);
-	static xml_node<>* GetRootNode(CharArrayWrapper& wrapper);
 
+
+	static void ParseComponentStates(FiniteStateMachineComponent* component, xml_node<> * rootNode);
+	static void ParseComponentTransitions(FiniteStateMachineComponent* component, xml_node<> * rootNode);
+
+
+	static xml_node<>* GetRootNode(CharArrayWrapper& wrapper);
 };
 

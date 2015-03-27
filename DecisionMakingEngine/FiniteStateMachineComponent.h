@@ -9,27 +9,28 @@
 using std::map;
 using std::string;
 using DME::Action;
-using DME::Query;
+using DME::Condition;
 
 typedef string StateName;
 typedef string ActionName;
+typedef string ConditionName;
 
 class FiniteStateMachineComponent : public DMEComponent
 {
-private:
+public:
 
 	struct State;
 
 	struct StateTransition
 	{
-		StateTransition(State* destination, Query query)
+		StateTransition(State* destination, ConditionName condition)
 		{
 			this->destinationState = destination;
-			this->query = query;
+			this->conditionName = condition;
 		}
 
 		State* destinationState;
-		Query query;
+		ConditionName conditionName;
 		
 	};
 
@@ -55,6 +56,7 @@ private:
 	typedef map<StateName, State> StateContainer;
 	typedef map<ActionName, DME::Action> ActionContainer;
 	typedef map<ActionName, DME::UpdateAction> UpdateActionContainer;
+	typedef map<ConditionName, Condition> ConditionContainer;
 
 public:
 	FiniteStateMachineComponent();
@@ -65,7 +67,9 @@ public:
 	void AddState(StateName stateName);
 	void SetInitialState(StateName stateName);
 
-	void SetTransition(StateName from, StateName to, Query condition);
+	void AddCondition(ConditionName conditionName);
+	void AddTransition(StateName from, StateName to, ConditionName conditionName);
+	void SetConditionMethod(ConditionName conditionName, DME::Condition condition);
 
 	void AddAction(ActionName actionName);
 	void AddUpdateAction(ActionName actionName);
@@ -98,6 +102,7 @@ private:
 private:
 
 	StateContainer states;
+	ConditionContainer conditions;
 	//TODO: find a  way to merge these two 
 	ActionContainer actions;
 	UpdateActionContainer updateActions;

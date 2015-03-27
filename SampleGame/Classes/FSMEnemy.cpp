@@ -36,11 +36,17 @@ void FSMEnemy::Initial(Player* player)
 	comp->AddUpdateAction("SearchForPlayer");
 	comp->AddUpdateAction("FollowPlayer");
 
+	comp->AddCondition("IsPlayerInRange");
+	comp->AddCondition("IsPlayerOutOfRange");
+
 	comp->SetUpdateActionMethod("SearchForPlayer", BIND_MEMBER_UPDATE_ACTION(FSMEnemy::SearchForPlayer, this));
 	comp->SetUpdateActionMethod("FollowPlayer", BIND_MEMBER_UPDATE_ACTION(FSMEnemy::FollowPlayer, this));
+
+	comp->SetConditionMethod("IsPlayerInRange", BIND_MEMBER_ACTION(FSMEnemy::IsPlayerInRange, this));
+	comp->SetConditionMethod("IsPlayerOutOfRange", BIND_MEMBER_ACTION(FSMEnemy::IsPlayerOutOfRange, this));
 		
-	comp->SetTransition("Searching", "Following", BIND_MEMBER_ACTION(FSMEnemy::IsPlayerInRange, this));
-	comp->SetTransition("Following", "Searching", BIND_MEMBER_ACTION(FSMEnemy::IsPlayerOutOfRange, this));
+	comp->AddTransition("Searching", "Following", "IsPlayerInRange");
+	comp->AddTransition("Following", "Searching", "IsPlayerOutOfRange");
 	comp->SetStateUpdateAction("Searching", "SearchForPlayer");
 	comp->SetStateUpdateAction("Following", "FollowPlayer");
 

@@ -43,6 +43,7 @@ FiniteStateMachineComponent* FiniteStateMachineParser::CreateWithData(xml_node<>
 	FiniteStateMachineComponent* component = new FiniteStateMachineComponent();
 
 	ParseComponentStates(component, rootNode);
+	ParseComponentTransitions(component, rootNode);
 
 	return component;
 }
@@ -85,6 +86,24 @@ void FiniteStateMachineParser::ParseComponentStates(FiniteStateMachineComponent*
 	}
 }
 
+void FiniteStateMachineParser::ParseComponentTransitions(FiniteStateMachineComponent* component, xml_node<> * rootNode)
+{
+	xml_node<> * transitionsNode = rootNode->first_node("Transitions");
+	if (transitionsNode == nullptr)
+		return;
+
+	for (xml_node<> *transitionNode = transitionsNode->first_node("Transition");
+		transitionNode; transitionNode = transitionNode->next_sibling("Transition"))
+	{
+		xml_node<>* fromNode = transitionNode->first_node("From");
+		xml_node<>* toNode = transitionNode->first_node("To");
+		xml_node<>* conditionNode = transitionNode->first_node("Condition");
+
+		component->AddTransition(fromNode->value(), toNode->value(), conditionNode->value());
+		component->AddCondition(conditionNode->value());
+	}
+}
+
 
 xml_node<>* FiniteStateMachineParser::GetRootNode(CharArrayWrapper& wrapper)
 {
@@ -92,3 +111,5 @@ xml_node<>* FiniteStateMachineParser::GetRootNode(CharArrayWrapper& wrapper)
 	xmlData.parse<0>(wrapper.Get());
 	return xmlData.first_node(ROOT_ELEMENT);
 }
+
+
