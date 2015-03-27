@@ -21,9 +21,6 @@ public:
 
 	static FiniteStateMachineComponent* Create(std::istream &stream);
 
-
-
-
 private:
 	FiniteStateMachineParser();
 	~FiniteStateMachineParser();

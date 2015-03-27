@@ -1,9 +1,10 @@
 #include "DecisionNode.h"
 
 
-DecisionNode::DecisionNode(DME::Query query, DecisionTreeNode* truePathNode, DecisionTreeNode* falsePathNode)
+DecisionNode::DecisionNode(DecisionTreeComponent* owner, ConditionName conditionName, DecisionTreeNode* truePathNode, DecisionTreeNode* falsePathNode)
+: DecisionTreeNode(owner)
 {
-	SetQuery(query);
+	SetConditionName(conditionName);
 	SetTruePathNode(truePathNode);
 	SetFalsePathNode(falsePathNode);
 }
@@ -11,19 +12,21 @@ DecisionNode::DecisionNode(DME::Query query, DecisionTreeNode* truePathNode, Dec
 
 DecisionNode::~DecisionNode()
 {
+	SAFE_DELETE(truePathNode);
+	SAFE_DELETE(falsePathNode);
 }
 
 void DecisionNode::ProcessNode(float dt)
 {
-	if (query())
+	if (owner->GetConditionMethod(conditionName)())
 		truePathNode->ProcessNode(dt);
 	else
 		falsePathNode->ProcessNode(dt);
 }
 
-void DecisionNode::SetQuery(DME::Query query)
+void DecisionNode::SetConditionName(ConditionName conditionName)
 {
-	this->query = query;
+	this->conditionName = conditionName;
 }
 
 void DecisionNode::SetTruePathNode(DecisionTreeNode* node)
@@ -34,4 +37,9 @@ void DecisionNode::SetTruePathNode(DecisionTreeNode* node)
 void DecisionNode::SetFalsePathNode(DecisionTreeNode* node)
 {
 	falsePathNode = node;
+}
+
+ConditionName DecisionNode::GetConditionName() const
+{
+	return conditionName;
 }

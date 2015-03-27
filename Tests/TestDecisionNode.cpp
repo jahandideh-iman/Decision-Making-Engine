@@ -4,6 +4,16 @@
 class DecisionTreeNodeDeltaTimeSpy : public DecisionTreeNode
 {
 public:
+
+	DecisionTreeNodeDeltaTimeSpy() : DecisionTreeNode(nullptr)
+	{
+
+	}
+
+	~DecisionTreeNodeDeltaTimeSpy()
+	{
+
+	}
 	void ProcessNode(float dt) override
 	{
 		lastDeltaTime = dt;
@@ -14,27 +24,42 @@ public:
 
 TEST_GROUP(DecisionNode)
 {
-	DecisionNode decisionNode;
+	DecisionTreeComponent* comp = nullptr;
+	DecisionNode* decisionNode = nullptr;
+
+	void setup()
+	{
+		comp = new DecisionTreeComponent();
+		decisionNode = new DecisionNode(comp);
+		comp->AddCondition("Condition");
+		decisionNode->SetConditionName("Condition");
+	}
+
+	void teardown()
+	{
+		delete decisionNode;
+		delete comp;
+	}
 };
 
 TEST(DecisionNode, DeltaTimeIsPropagatedToTruePathChild)
 {
-	DecisionTreeNodeDeltaTimeSpy truePathNodeSpy;
-	decisionNode.SetQuery([]()->bool{return true; });
-	decisionNode.SetTruePathNode(&truePathNodeSpy);
+	DecisionTreeNodeDeltaTimeSpy* truePathNodeSpy = new DecisionTreeNodeDeltaTimeSpy;
+	comp->SetConditionMethod("Condition",[]()->bool{return true; });
+	decisionNode->SetTruePathNode(truePathNodeSpy);
+				
+	decisionNode->ProcessNode(0.5);
 
-	decisionNode.ProcessNode(0.5);
-
-	CHECK_EQUAL(0.5, truePathNodeSpy.lastDeltaTime);
+	CHECK_EQUAL(0.5, truePathNodeSpy->lastDeltaTime);
 }
 
 TEST(DecisionNode, DeltaTimeIsPropagatedToFalsePathChild)
 {
-	DecisionTreeNodeDeltaTimeSpy falsePathNodeSpy;
-	decisionNode.SetQuery([]()->bool{return false; });
-	decisionNode.SetFalsePathNode(&falsePathNodeSpy);
+	DecisionTreeNodeDeltaTimeSpy* falsePathNodeSpy = new DecisionTreeNodeDeltaTimeSpy;
+	comp->SetConditionMethod("Condition", []()->bool{return false; });
+	decisionNode->SetFalsePathNode(falsePathNodeSpy);
 
-	decisionNode.ProcessNode(0.5);
+	decisionNode->ProcessNode(0.5);
 
-	CHECK_EQUAL(0.5, falsePathNodeSpy.lastDeltaTime);
+	CHECK_EQUAL(0.5, falsePathNodeSpy->lastDeltaTime);
 }

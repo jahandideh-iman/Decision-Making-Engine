@@ -1,8 +1,10 @@
 #include "DecisionTreeNode.h"
 
 
-DecisionTreeNode::DecisionTreeNode()
+
+DecisionTreeNode::DecisionTreeNode(DecisionTreeComponent* owner)
 {
+	this->owner = owner;
 }
 
 

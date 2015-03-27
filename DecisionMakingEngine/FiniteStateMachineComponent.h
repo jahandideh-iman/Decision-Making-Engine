@@ -11,9 +11,9 @@ using std::string;
 using DME::Action;
 using DME::Condition;
 
-typedef string StateName;
-typedef string ActionName;
-typedef string ConditionName;
+using DME::ActionName;
+using DME::ConditionName;
+using DME::StateName;
 
 class FiniteStateMachineComponent : public DMEComponent
 {
