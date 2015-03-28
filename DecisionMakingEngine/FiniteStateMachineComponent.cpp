@@ -162,6 +162,11 @@ void FiniteStateMachineComponent::AddUpdateAction(ActionName actionName)
 	updateActions[actionName] = nullptr;
 }
 
+StateName FiniteStateMachineComponent::GetInitialStateName() const
+{
+	return initialStateName;
+}
+
 
 
 

@@ -32,6 +32,7 @@ private:
 
 	static void ParseComponentStates(FiniteStateMachineComponent* component, xml_node<> * rootNode);
 	static void ParseComponentTransitions(FiniteStateMachineComponent* component, xml_node<> * rootNode);
+	static void ParseComponentInitialState(FiniteStateMachineComponent* component, xml_node<>* rootNode);
 
 
 	static xml_node<>* GetRootNode(CharArrayWrapper& wrapper);

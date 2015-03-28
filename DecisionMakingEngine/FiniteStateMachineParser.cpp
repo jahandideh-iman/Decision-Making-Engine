@@ -44,6 +44,7 @@ FiniteStateMachineComponent* FiniteStateMachineParser::CreateWithData(xml_node<>
 
 	ParseComponentStates(component, rootNode);
 	ParseComponentTransitions(component, rootNode);
+	ParseComponentInitialState(component, rootNode);
 
 	return component;
 }
@@ -110,6 +111,15 @@ xml_node<>* FiniteStateMachineParser::GetRootNode(CharArrayWrapper& wrapper)
 	xml_document<> xmlData;
 	xmlData.parse<0>(wrapper.Get());
 	return xmlData.first_node(ROOT_ELEMENT);
+}
+
+void FiniteStateMachineParser::ParseComponentInitialState(FiniteStateMachineComponent* component, xml_node<>* rootNode)
+{
+	xml_node<> * initialStateNode = rootNode->first_node("InitialState");
+	if (initialStateNode == nullptr)
+		return;
+
+	component->SetInitialState(initialStateNode->value());
 }
 
 

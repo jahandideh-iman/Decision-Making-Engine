@@ -66,6 +66,7 @@ public:
 
 	void AddState(StateName stateName);
 	void SetInitialState(StateName stateName);
+	StateName GetInitialStateName() const;
 
 	void AddCondition(ConditionName conditionName);
 	void AddTransition(StateName from, StateName to, ConditionName conditionName);
