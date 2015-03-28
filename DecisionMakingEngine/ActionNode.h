@@ -13,7 +13,7 @@ public:
 	~ActionNode();
 
 	void SetActionName(ActionName updateAction);
-	ActionName GetAction() const;
+	ActionName GetActionName() const;
 
 	void ProcessNode(float dt) override;
 

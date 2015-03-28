@@ -23,7 +23,7 @@ private:
 
 	DecisionTreeParser();
 	~DecisionTreeParser();
-
+	static DecisionTreeNode* ParseComponentNode(DecisionTreeComponent* component, xml_node<>* treeNode);
 
 };
 

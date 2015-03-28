@@ -43,3 +43,13 @@ ConditionName DecisionNode::GetConditionName() const
 {
 	return conditionName;
 }
+
+const DecisionTreeNode* DecisionNode::GetTruePathNode() const
+{
+	return truePathNode;
+}
+
+const DecisionTreeNode* DecisionNode::GetFalsePathNode() const
+{
+	return falsePathNode;
+}

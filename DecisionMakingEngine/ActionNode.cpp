@@ -25,7 +25,7 @@ void ActionNode::ProcessNode(float dt)
 	owner->GetActionMethod(updateActionName)(dt);
 }
 
-ActionName ActionNode::GetAction() const
+ActionName ActionNode::GetActionName() const
 {
 	return updateActionName;
 }

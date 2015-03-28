@@ -25,6 +25,9 @@ public:
 	void SetConditionName(ConditionName conditionName);
 	ConditionName GetConditionName() const;
 
+	const DecisionTreeNode* GetTruePathNode() const;
+	const DecisionTreeNode* GetFalsePathNode() const;
+
 private:
 	DecisionTreeNode* truePathNode = nullptr;
 	DecisionTreeNode* falsePathNode = nullptr;
