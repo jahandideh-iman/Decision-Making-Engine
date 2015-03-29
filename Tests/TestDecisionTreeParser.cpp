@@ -6,55 +6,47 @@
 
 using std::string;
 
-#define SAFE_DELETE(pointer) {if (pointer) delete pointer; pointer = nullptr; }
 
 
 
 TEST_GROUP(DecisionTreeParser)
 {
 	DecisionTreeComponent* comp;
-	std::stringbuf* tempBuf = nullptr;
-	std::istream* tempIStream = nullptr;
+	DecisionTreeParser parser;
+
 
 	void teardown()
 	{
 		SAFE_DELETE(comp);
-		SAFE_DELETE(tempBuf);
-		SAFE_DELETE(tempIStream);
+
 	}
 
-	std::istream& CreateStream(string input)
-	{
-		tempBuf = new std::stringbuf(input);
-		tempIStream = new std::istream(tempBuf);
-		return  *(tempIStream);
-	}
 };
 
 TEST(DecisionTreeParser, CreateNullOnEmptyInput)
 {
-	comp = DecisionTreeParser::Create(CreateStream(""));
+	comp = (DecisionTreeComponent*) parser.Create("");
 
 	POINTERS_EQUAL(nullptr, comp);
 }
 
 TEST(DecisionTreeParser, CreateEmptyComponentWithNoData)
 {
-	comp = DecisionTreeParser::Create(CreateStream(
+	comp = (DecisionTreeComponent*) parser.Create(
 		"<DMEComponent  type=\"DecisionTree\" >"
-		"</DMEComponent>"));
+		"</DMEComponent> ");
 
 	CHECK_TRUE(comp->IsEmpty());
 }
 
 TEST(DecisionTreeParser, ComponentHasTheProvidedActionNodeAsRoot)
 {
-	comp = DecisionTreeParser::Create(CreateStream(
+	comp = (DecisionTreeComponent*) parser.Create(
 		"<DMEComponent  type=\"DecisionTree\" >"
 		"     <Node type=\"ActionNode\" >"
 		"           <Action>ActionName</Action>"
 		"     </Node>"
-		"</DMEComponent>"));
+		"</DMEComponent>");
 
 	CHECK_TRUE(comp->GetRoot() != nullptr);
 	CHECK_TRUE(dynamic_cast<const ActionNode*>(comp->GetRoot()) != nullptr);
@@ -63,12 +55,12 @@ TEST(DecisionTreeParser, ComponentHasTheProvidedActionNodeAsRoot)
 
 TEST(DecisionTreeParser, ComponentHasTheProvidedDecisionNodeAsRoot)
 {
-	comp = DecisionTreeParser::Create(CreateStream(
+	comp = (DecisionTreeComponent*) parser.Create(
 		"<DMEComponent  type=\"DecisionTree\" >"
 		"     <Node type=\"DecisionNode\" >"
 		"           <Condition>ConditionName</Condition>"
 		"     </Node>"
-		"</DMEComponent>"));
+		"</DMEComponent>");
 
 	CHECK_TRUE(comp->GetRoot() != nullptr);
 	CHECK_TRUE(dynamic_cast<const DecisionNode*>(comp->GetRoot()) != nullptr);
@@ -77,7 +69,7 @@ TEST(DecisionTreeParser, ComponentHasTheProvidedDecisionNodeAsRoot)
 
 TEST(DecisionTreeParser, ComponentHasTheProvidedTrueAndFalsePathChild)
 {
-	comp = DecisionTreeParser::Create(CreateStream(
+	comp = (DecisionTreeComponent*) parser.Create(
 		"<DMEComponent  type=\"DecisionTree\" >"
 		"     <Node type=\"DecisionNode\" >"
 		"           <Condition>ConditionName</Condition>"
@@ -92,7 +84,7 @@ TEST(DecisionTreeParser, ComponentHasTheProvidedTrueAndFalsePathChild)
 		"                </Node>"
 		"          </FalsePath>"
 		"     </Node>"
-		"</DMEComponent>"));
+		"</DMEComponent>");
 
 	const DecisionNode* root = dynamic_cast<const DecisionNode*>(comp->GetRoot());
 	const ActionNode* truePathNode = dynamic_cast<const ActionNode*>(root->GetTruePathNode());
@@ -107,7 +99,7 @@ TEST(DecisionTreeParser, ComponentHasTheProvidedTrueAndFalsePathChild)
 
 TEST(DecisionTreeParser, IntegrationTest)
 {
-	comp = DecisionTreeParser::Create(CreateStream(
+	comp = (DecisionTreeComponent*) parser.Create(
 		"<DMEComponent  type=\"DecisionTree\" >"
 		"     <Node type=\"DecisionNode\" >"
 		"           <Condition>FirstConditionName</Condition>"
@@ -132,7 +124,7 @@ TEST(DecisionTreeParser, IntegrationTest)
 		"                 </Node>"
 		"          </FalsePath>"
 		"     </Node>"
-		"</DMEComponent>"));
+		"</DMEComponent>");
 
 	const DecisionNode* root = dynamic_cast<const DecisionNode*>(comp->GetRoot());
 	const ActionNode* firstTruePathNode = dynamic_cast<const ActionNode*>(root->GetTruePathNode());

@@ -3,7 +3,7 @@ class DMEComponent
 {
 public:
 	DMEComponent(){};
-	~DMEComponent(){};
+	virtual ~DMEComponent() {};
 
 	virtual void Update(float dt) = 0;
 };

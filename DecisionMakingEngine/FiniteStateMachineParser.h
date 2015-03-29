@@ -4,37 +4,34 @@
 #include "rapidxml-1.13/rapidxml.hpp"
 #include "FiniteStateMachineComponent.h"
 #include "DMEUtilities.h"
-
+#include "DMEComponentParser.h"
 using namespace rapidxml;
 using namespace std;
 
-#define ROOT_ELEMENT "DMEComponent"
+
 #define TYPE_ATTRIBUTE "type"
 #define TYPE_NAME "FiniteStateMachine"
 #define STATES_ELEMENT "States"
 #define STATE_ELEMENT "State"
 #define STATE_NAME_ELEMENT "Name"
 
-class FiniteStateMachineParser
+class FiniteStateMachineParser: public DMEComponentParser
 {
 public:
-
-	static FiniteStateMachineComponent* Create(std::istream &stream);
-
-private:
 	FiniteStateMachineParser();
 	~FiniteStateMachineParser();
 
-	static FiniteStateMachineComponent* CreateWithData(xml_node<> * rootNode);
-	static bool IsDataValid(xml_node<> * rootNode);
-	static std::string ReadData(std::istream &stream);
+protected:
+
+	DMEComponent* CreateWithData(xml_node<> * rootNode) override;
+
+private:
 
 
-	static void ParseComponentStates(FiniteStateMachineComponent* component, xml_node<> * rootNode);
-	static void ParseComponentTransitions(FiniteStateMachineComponent* component, xml_node<> * rootNode);
-	static void ParseComponentInitialState(FiniteStateMachineComponent* component, xml_node<>* rootNode);
 
+	void ParseComponentStates(FiniteStateMachineComponent* component, xml_node<> * rootNode);
+	void ParseComponentTransitions(FiniteStateMachineComponent* component, xml_node<> * rootNode);
+	void ParseComponentInitialState(FiniteStateMachineComponent* component, xml_node<>* rootNode);
 
-	static xml_node<>* GetRootNode(CharArrayWrapper& wrapper);
 };
 

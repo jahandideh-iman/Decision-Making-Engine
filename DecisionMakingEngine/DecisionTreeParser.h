@@ -6,23 +6,21 @@
 #include "ActionNode.h"
 #include "DecisionNode.h"
 #include "DMEUtilities.h"
+#include "DMEComponentParser.h"
 
 using namespace rapidxml;
 using namespace std;
 
-class DecisionTreeParser
+class DecisionTreeParser : public DMEComponentParser
 {
 public:
-	static DecisionTreeComponent* Create(std::istream &stream);
-private:
-	static DecisionTreeComponent* CreateWithData(xml_node<> * rootNode);
-	static bool IsDataValid(xml_node<> * rootNode);
-	static std::string ReadData(std::istream &stream);
-
-	static xml_node<>* GetRootNode(CharArrayWrapper& wrapper);
-
 	DecisionTreeParser();
 	~DecisionTreeParser();
+
+protected:
+	DMEComponent* CreateWithData(xml_node<> * rootNode) override;
+
+private:
 	static DecisionTreeNode* ParseComponentNode(DecisionTreeComponent* component, xml_node<>* treeNode);
 
 };

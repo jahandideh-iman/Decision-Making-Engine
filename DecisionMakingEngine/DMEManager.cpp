@@ -4,21 +4,23 @@ DMEManager* DMEManager::manager = nullptr;
 
 DMEManager::DMEManager()
 {
+	InitialDefaultParsers();
 }
-
 
 DMEManager::~DMEManager()
 {
+	for (auto parser : parsers)
+		delete parser;
 }
 
 void DMEManager::AddComponent(DMEComponent* component)
 {
-	container.push_back(component);
+	components.push_back(component);
 }
 
 void DMEManager::Update(float dt)
 {
-	for (DMEComponent* c : container)
+	for (DMEComponent* c : components)
 		c->Update(dt);
 }
 
@@ -37,5 +39,31 @@ void DMEManager::Destroy()
 
 bool DMEManager::isEmpty()
 {
-	return container.empty();
+	return components.empty();
+}
+
+DMEComponent* DMEManager::CreateComponent(std::istream &stream)
+{
+	string data = ReadData(stream);
+	
+	for (auto parser : parsers)
+	{
+		DMEComponent* comp;
+		comp = parser->Create(data);
+		if (comp != nullptr)
+			return comp;
+	}
+	return nullptr;
+}
+
+std::string DMEManager::ReadData(std::istream &stream)
+{
+	std::istreambuf_iterator<char> eos;
+	return std::string(std::istreambuf_iterator<char>(stream), eos);
+}
+
+void DMEManager::InitialDefaultParsers()
+{
+	parsers.push_back(new DecisionTreeParser());
+	parsers.push_back(new FiniteStateMachineParser());
 }

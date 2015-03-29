@@ -3,11 +3,18 @@
 #include "DecisionTreeComponent.h"
 #include "FiniteStateMachineComponent.h"
 #include "DMEComponent.h"
+#include <sstream>
+#include "DMEUtilities.h"
 
 
 class DMEComponentUpdateCounterMock : public DMEComponent
 {
 public:
+
+	~DMEComponentUpdateCounterMock()
+	{
+
+	};
 	void Update(float dt)
 	{
 		++updateCount;
@@ -19,6 +26,12 @@ public:
 class DMEComponentDeltaTimeSpy : public DMEComponent
 {
 public:
+
+	~DMEComponentDeltaTimeSpy()
+	{
+
+	};
+
 	void Update(float dt) override
 	{
 		lastDeltaTime = dt;
@@ -30,6 +43,9 @@ public:
 TEST_GROUP(DMEManager)
 {
 	DMEManager * manager;
+
+	std::stringbuf* tempBuf = nullptr;
+	std::istream* tempIStream = nullptr;
 
 	void CallMultipleUpdate(unsigned numberOfTimes)
 	{
@@ -45,6 +61,16 @@ TEST_GROUP(DMEManager)
 	void teardown()
 	{
 		DMEManager::Destroy();
+		SAFE_DELETE(tempBuf);
+		SAFE_DELETE(tempIStream);
+	}
+
+
+	std::istream& CreateStream(string input)
+	{
+		tempBuf = new std::stringbuf(input);
+		tempIStream = new std::istream(tempBuf);
+		return  *(tempIStream);
 	}
 };
 
@@ -97,5 +123,38 @@ TEST(DMEManager, DeltaTimeIsPropagatedToComponent)
 	manager->Update(0.5);
 
 	CHECK_EQUAL(0.5, componentSpy.lastDeltaTime);
+}
+
+TEST(DMEManager, CreateNullComponentOnEmptyInput)
+{
+	DMEComponent* comp = DMEManager::Get()->CreateComponent(CreateStream(""));
+
+	POINTERS_EQUAL(nullptr, comp);
+}
+
+TEST(DMEManager, CreateDecisionTreeComponentOnValidInput)
+{
+	DMEComponent* comp = DMEManager::Get()->CreateComponent(CreateStream(
+		"<DMEComponent  type=\"DecisionTree\" >"
+		"</DMEComponent>"));
+
+	DecisionTreeComponent* decisionTreeComp = dynamic_cast<DecisionTreeComponent*> (comp);
+
+	CHECK_TRUE(decisionTreeComp != nullptr);
+
+	delete comp;
+}
+
+TEST(DMEManager, CreateFiniteStateMachineComponentOnValidInput)
+{
+	DMEComponent* comp = DMEManager::Get()->CreateComponent(CreateStream(
+		"<DMEComponent  type=\"FiniteStateMachine\" >"
+		"</DMEComponent>"));
+
+	FiniteStateMachineComponent* finiteStateMachineComp = dynamic_cast<FiniteStateMachineComponent*> (comp);
+
+	CHECK_TRUE(finiteStateMachineComp != nullptr);
+
+	delete comp;
 }
 

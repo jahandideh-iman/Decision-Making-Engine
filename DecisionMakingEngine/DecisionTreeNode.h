@@ -6,7 +6,7 @@ class DecisionTreeNode
 {
 public:
 	DecisionTreeNode(DecisionTreeComponent* owner);
-	virtual ~DecisionTreeNode();
+	virtual ~DecisionTreeNode() = 0;
 
 	virtual void ProcessNode(float dt) = 0;
 protected:

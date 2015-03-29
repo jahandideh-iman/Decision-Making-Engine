@@ -3,6 +3,7 @@
 
 DecisionTreeParser::DecisionTreeParser()
 {
+	typeName = "DecisionTree";
 }
 
 
@@ -10,18 +11,8 @@ DecisionTreeParser::~DecisionTreeParser()
 {
 }
 
-DecisionTreeComponent* DecisionTreeParser::Create(std::istream &stream)
-{
-	CharArrayWrapper wrapper(ReadData(stream));
-	xml_node<>* rootNode = GetRootNode(wrapper);
 
-	if (IsDataValid(rootNode))
-		return CreateWithData(rootNode);
-
-	return nullptr;
-}
-
-DecisionTreeComponent* DecisionTreeParser::CreateWithData(xml_node<> * rootNode)
+DMEComponent* DecisionTreeParser::CreateWithData(xml_node<> * rootNode)
 {
 	DecisionTreeComponent* component = new DecisionTreeComponent();
 	xml_node<>* treeRootNode = rootNode->first_node("Node");
@@ -32,30 +23,8 @@ DecisionTreeComponent* DecisionTreeParser::CreateWithData(xml_node<> * rootNode)
 }
 
 
-std::string DecisionTreeParser::ReadData(std::istream &stream)
-{
-	std::istreambuf_iterator<char> eos;
-	return std::string(std::istreambuf_iterator<char>(stream), eos);
-}
-
-bool DecisionTreeParser::IsDataValid(xml_node<> * rootNode)
-{
-	if (rootNode != nullptr)
-	{
-		xml_attribute<>* typeAttr = rootNode->first_attribute("type");
-		if (typeAttr != nullptr && strcmp(typeAttr->value(), "DecisionTree") == 0)
-			return true;
-	}
-	return false;
-}
 
 
-xml_node<>* DecisionTreeParser::GetRootNode(CharArrayWrapper& wrapper)
-{
-	xml_document<> xmlData;
-	xmlData.parse<0>(wrapper.Get());
-	return xmlData.first_node("DMEComponent");
-}
 
 DecisionTreeNode* DecisionTreeParser::ParseComponentNode(DecisionTreeComponent* component, xml_node<>* treeNode)
 {

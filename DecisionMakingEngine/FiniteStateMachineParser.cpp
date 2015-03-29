@@ -3,6 +3,7 @@
 
 FiniteStateMachineParser::FiniteStateMachineParser()
 {
+	typeName = "FiniteStateMachine";
 }
 
 
@@ -10,35 +11,9 @@ FiniteStateMachineParser::~FiniteStateMachineParser()
 {
 }
 
-FiniteStateMachineComponent* FiniteStateMachineParser::Create(std::istream &stream)
-{
-	CharArrayWrapper wrapper(ReadData(stream));
-	xml_node<>* rootNode = GetRootNode(wrapper);
-	
-	if (IsDataValid(rootNode))
-		return CreateWithData(rootNode);
-	return nullptr;
-}
 
 
-bool FiniteStateMachineParser::IsDataValid(xml_node<> * rootNode)
-{
-	if (rootNode != nullptr)
-	{
-		xml_attribute<>* typeAttr = rootNode->first_attribute(TYPE_ATTRIBUTE);
-		if (typeAttr != nullptr && strcmp(typeAttr->value(), TYPE_NAME) == 0)
-			return true;
-	}
-	return false;
-}
-
-std::string FiniteStateMachineParser::ReadData(std::istream &stream)
-{
-	std::istreambuf_iterator<char> eos;
-	return std::string(std::istreambuf_iterator<char>(stream), eos);
-}
-
-FiniteStateMachineComponent* FiniteStateMachineParser::CreateWithData(xml_node<> * rootNode)
+DMEComponent* FiniteStateMachineParser::CreateWithData(xml_node<> * rootNode)
 {
 	FiniteStateMachineComponent* component = new FiniteStateMachineComponent();
 
@@ -105,13 +80,6 @@ void FiniteStateMachineParser::ParseComponentTransitions(FiniteStateMachineCompo
 	}
 }
 
-
-xml_node<>* FiniteStateMachineParser::GetRootNode(CharArrayWrapper& wrapper)
-{
-	xml_document<> xmlData;
-	xmlData.parse<0>(wrapper.Get());
-	return xmlData.first_node(ROOT_ELEMENT);
-}
 
 void FiniteStateMachineParser::ParseComponentInitialState(FiniteStateMachineComponent* component, xml_node<>* rootNode)
 {

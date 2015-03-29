@@ -12,9 +12,11 @@ class CharArrayWrapper
 public:
 	CharArrayWrapper(std::string& str)
 	{
-		cstr = new char[str.length() + 1];
-		strcpy_s(cstr, str.length() + 1, str.c_str());
+		length = str.length() + 1;
+		cstr = new char[length];
+		strcpy_s(cstr,length, str.c_str());
 	}
+
 
 	~CharArrayWrapper()
 	{
@@ -28,4 +30,5 @@ public:
 
 private:
 	char *cstr = nullptr;
+	unsigned length = 0;
 };

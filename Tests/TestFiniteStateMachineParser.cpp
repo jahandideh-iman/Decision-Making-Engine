@@ -10,6 +10,7 @@
 TEST_GROUP(FiniteStateMachineParser)
 {
 	FiniteStateMachineComponent* comp;
+	FiniteStateMachineParser parser;
 
 	std::stringbuf* tempBuf = nullptr;
 	std::istream* tempIStream = nullptr;
@@ -46,16 +47,16 @@ TEST_GROUP(FiniteStateMachineParser)
 
 TEST(FiniteStateMachineParser, CreateNullOnEmptyInput)
 {
-	comp = FiniteStateMachineParser::Create(CreateStream(""));
+	comp = (FiniteStateMachineComponent*)parser.Create("");
 
 	POINTERS_EQUAL(nullptr, comp);
 }
 
 TEST(FiniteStateMachineParser, CreateEmptyComponentWithNoData)
 {
-	comp = FiniteStateMachineParser::Create(CreateStream(
+	comp = (FiniteStateMachineComponent*)parser.Create(
 		"<DMEComponent  type=\"FiniteStateMachine\" >"
-		"</DMEComponent>"));
+		"</DMEComponent>");
 
 	CHECK_TRUE(comp->HasNoState());
 }
@@ -63,14 +64,14 @@ TEST(FiniteStateMachineParser, CreateEmptyComponentWithNoData)
 TEST(FiniteStateMachineParser, ComponentHasTheProvidedStates)
 {
 
-	comp = FiniteStateMachineParser::Create(CreateStream(
+	comp = (FiniteStateMachineComponent*)parser.Create(
 		"<DMEComponent  type=\"FiniteStateMachine\" >"
 		"    <States>"
 		"        <State><Name>StateOne</Name></State>"
 		"        <State><Name>StateTwo</Name></State>"
 		"        <State><Name>StateThree</Name></State>"
 		"    </States>"
-		"</DMEComponent>"));
+		"</DMEComponent>");
 
 	CHECK_TRUE(comp->HasState("StateOne"));
 	CHECK_TRUE(comp->HasState("StateTwo"));
@@ -80,21 +81,21 @@ TEST(FiniteStateMachineParser, ComponentHasTheProvidedStates)
 TEST(FiniteStateMachineParser, ComponentHasTheProvidedInitialState)
 {
 
-	comp = FiniteStateMachineParser::Create(CreateStream(
+	comp = (FiniteStateMachineComponent*)parser.Create(
 		"<DMEComponent  type=\"FiniteStateMachine\" >"
 		"    <States>"
 		"        <State><Name>StateOne</Name></State>"
 		"        <State><Name>StateTwo</Name></State>"
 		"    </States>"
 		"    <InitialState>StateTwo</InitialState>"
-		"</DMEComponent>"));
+		"</DMEComponent>");
 
 	CHECK_EQUAL("StateTwo", comp->GetInitialStateName());
 }
 
 TEST(FiniteStateMachineParser, ComponentHasTheProvidedStateActions)
 {
-	comp = FiniteStateMachineParser::Create(CreateStream(
+	comp = (FiniteStateMachineComponent*)parser.Create(
 		"<DMEComponent  type=\"FiniteStateMachine\" >"
 		"    <States>"
 		"        <State>"
@@ -104,7 +105,7 @@ TEST(FiniteStateMachineParser, ComponentHasTheProvidedStateActions)
 		"               <ExitAction>StateOneExitAction</ExitAction>"
 		"        </State>"
 		"    </States>"
-		"</DMEComponent>"));
+		"</DMEComponent>");
 
 	CHECK_EQUAL("StateOneUpdateAction", comp->GetState("StateOne")->updateActionName);
 	CHECK_EQUAL("StateOneEntryAction", comp->GetState("StateOne")->entryActionName);
@@ -113,7 +114,7 @@ TEST(FiniteStateMachineParser, ComponentHasTheProvidedStateActions)
 
 TEST(FiniteStateMachineParser, ComponentHasTheProvidedTransitions)
 {
-	comp = FiniteStateMachineParser::Create(CreateStream(
+	comp = (FiniteStateMachineComponent*)parser.Create(
 		"<DMEComponent  type=\"FiniteStateMachine\" >"
 		"    <States>"
 		"        <State>"
@@ -135,7 +136,7 @@ TEST(FiniteStateMachineParser, ComponentHasTheProvidedTransitions)
 		"            <Condition>TransitionTwoCondition</Condition>"
 		"        </Transition>"
 		"    </Transitions>"
-		"</DMEComponent>"));
+		"</DMEComponent>");
 
 	CheckHasTransition("StateOne", "StateTwo", "TransitionOneCondition");
 	CheckHasTransition("StateTwo", "StateOne", "TransitionTwoCondition");
