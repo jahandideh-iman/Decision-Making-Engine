@@ -22,7 +22,7 @@ void ActionNode::ProcessNode(float dt)
 	if (updateActionName == "")
 		return;
 
-	owner->GetActionMethod(updateActionName)(dt);
+	owner->GetActionMethod(updateActionName)->Invoke(dt);
 }
 
 ActionName ActionNode::GetActionName() const

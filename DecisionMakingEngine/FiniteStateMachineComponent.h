@@ -5,18 +5,26 @@
 #include <vector>
 #include "DMEComponent.h"
 #include "DMEDefines.h"
+#include "Action.h"
+#include "OneTimeCalledAction.h"
+#include "EveryUpdateCalledAction.h"
+#include "Condition.h"
 
 using std::map;
 using std::string;
-using DME::Action;
+
 using DME::Condition;
 
 using DME::ActionName;
 using DME::ConditionName;
 using DME::StateName;
 
+using DME::OneTimeCalledAction;
+using DME::EveryUpdateCalledAction;
+
 class FiniteStateMachineComponent : public DMEComponent
 {
+
 public:
 
 	struct State;
@@ -39,24 +47,23 @@ public:
 		State(StateName name = "", ActionName entryAction = "", ActionName updateAction = "", ActionName exitAction = "")
 		{
 			this->name = name;
-			this->entryAction = entryAction;
-			this->updateAction = updateAction;
-			this->exitAction = exitAction;
+			this->entryActionName = entryAction;
+			this->updateActionName = updateAction;
+			this->exitActionName = exitAction;
 		}
 
 		StateName name;
-		ActionName entryAction;
-		ActionName exitAction;
-		ActionName updateAction;
+		ActionName entryActionName;
+		ActionName exitActionName;
+		ActionName updateActionName;
 
 		std::vector<StateTransition> transitions;
 	};
 
 
 	typedef map<StateName, State> StateContainer;
-	typedef map<ActionName, DME::Action> ActionContainer;
-	typedef map<ActionName, DME::UpdateAction> UpdateActionContainer;
-	typedef map<ConditionName, Condition> ConditionContainer;
+	typedef map<ActionName, DME::Action*> ActionContainer;
+	typedef map<ConditionName, Condition*> ConditionContainer;
 
 public:
 	FiniteStateMachineComponent();
@@ -70,13 +77,11 @@ public:
 
 	void AddCondition(ConditionName conditionName);
 	void AddTransition(StateName from, StateName to, ConditionName conditionName);
-	void SetConditionMethod(ConditionName conditionName, DME::Condition condition);
+	void SetConditionMethod(ConditionName conditionName, Condition* condition);
 
 	void AddAction(ActionName actionName);
-	void AddUpdateAction(ActionName actionName);
 
-	void SetUpdateActionMethod(ActionName actionName, DME::UpdateAction action);
-	void SetActionMethod(ActionName actionName, DME::Action action);
+	void SetActionMethod(ActionName actionName, DME::Action* action);
 
 	void SetStateEntryAction(StateName stateName, ActionName action);
 	void SetStateUpdateAction(StateName stateName, ActionName action);
@@ -104,9 +109,7 @@ private:
 
 	StateContainer states;
 	ConditionContainer conditions;
-	//TODO: find a  way to merge these two 
 	ActionContainer actions;
-	UpdateActionContainer updateActions;
 
 	State* currentState;
 	StateName initialStateName;

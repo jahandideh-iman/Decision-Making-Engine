@@ -4,6 +4,7 @@
 
 #include "DMEDefines.h"
 #include "DMEUtilities.h"
+#include "Condition.h"
  
 using DME::ConditionName;
 using DME::Condition;

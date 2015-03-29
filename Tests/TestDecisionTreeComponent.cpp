@@ -42,13 +42,13 @@ TEST_GROUP(DecisionTreeComponent)
 			decisionTreeComponent->Update();
 	}
 
-	ActionNode* CreateActionNode(ActionName actionName, UpdateAction action)
+	ActionNode* CreateActionNode(ActionName actionName, EveryUpdateCalledAction* action)
 	{
 		decisionTreeComponent->SetActionMethod(actionName, action);
 		return new ActionNode(decisionTreeComponent, actionName);
 	}
 
-	DecisionNode* CreateDecisionNode(ConditionName conditionName, Condition condition, DecisionTreeNode* truePathNode = nullptr , DecisionTreeNode* falsePathNode = nullptr)
+	DecisionNode* CreateDecisionNode(ConditionName conditionName, Condition* condition, DecisionTreeNode* truePathNode = nullptr , DecisionTreeNode* falsePathNode = nullptr)
 	{
 		decisionTreeComponent->SetConditionMethod(conditionName, condition);
 		return new DecisionNode(decisionTreeComponent, conditionName, truePathNode, falsePathNode);
@@ -72,7 +72,7 @@ TEST(DecisionTreeComponent, IsNotEmptyAfterSettingRoot)
 TEST(DecisionTreeComponent, RootIsExecutedOnUpdateIfItIsAnActionNode)
 {
 	auto callCount = 0u;
-	ActionNode* actionNode = CreateActionNode("ArbitraryName", [&](float dt)->void{++callCount; });
+	ActionNode* actionNode = CreateActionNode("ArbitraryName", new EveryUpdateCalledAction([&](float dt)->void{++callCount; }));
 	decisionTreeComponent->SetRoot(actionNode);
 
 	CallMultipleUpdate(5);
@@ -85,8 +85,8 @@ TEST(DecisionTreeComponent, TruePathIsExecutedOnUpdateIfNodeConditionIsMet)
 {
 	auto callCount = 0u;
 
-	ActionNode* truePathNode = CreateActionNode("ArbitraryActionName", [&](float dt)->void{++callCount; });
-	DecisionNode* decisionNode = CreateDecisionNode("ArbitraryConditionName", []()->bool{return true; }, truePathNode);
+	ActionNode* truePathNode = CreateActionNode("ArbitraryActionName", new EveryUpdateCalledAction([&](float dt)->void{++callCount; }));
+	DecisionNode* decisionNode = CreateDecisionNode("ArbitraryConditionName", new Condition([]()->bool{return true; }), truePathNode);
 	decisionTreeComponent->SetRoot(decisionNode);
 
 	CallMultipleUpdate(5);
@@ -99,8 +99,8 @@ TEST(DecisionTreeComponent, FalsePathIsExecutedOnUpdateIfNodeConditionIsNotMet)
 {
 	auto callCount = 0u;
 
-	ActionNode* falsePathNode = CreateActionNode("ArbitraryActionName", [&](float dt)->void{++callCount; });
-	DecisionNode* decisionNode = CreateDecisionNode("ArbitraryConditionName", []()->bool{return false; }, nullptr, falsePathNode);
+	ActionNode* falsePathNode = CreateActionNode("ArbitraryActionName", new EveryUpdateCalledAction([&](float dt)->void{++callCount; }));
+	DecisionNode* decisionNode = CreateDecisionNode("ArbitraryConditionName", new Condition([]()->bool{return false; }), nullptr, falsePathNode);
 	decisionTreeComponent->SetRoot(decisionNode);
 
 	CallMultipleUpdate(5);
@@ -121,9 +121,9 @@ TEST(DecisionTreeComponent, DeltaTimeIsPropagatedToDecisionNode)
 TEST(DecisionTreeComponent, IntegerationTest)
 {
 	auto callCount = 0u;
-	ActionNode* actionNode= CreateActionNode("ArbitraryActionName", [&](float dt)->void{++callCount; });
-	DecisionNode* secondDecisionNode = CreateDecisionNode("ConditionOne", []()->bool{return false; }, nullptr, actionNode);
-	DecisionNode* firstDecisionNode = CreateDecisionNode("ConditionTwo", []()->bool{return true; }, secondDecisionNode, nullptr);
+	ActionNode* actionNode = CreateActionNode("ArbitraryActionName", new EveryUpdateCalledAction([&](float dt)->void{++callCount; }));
+	DecisionNode* secondDecisionNode = CreateDecisionNode("ConditionOne", new Condition([]()->bool{return false; }), nullptr, actionNode);
+	DecisionNode* firstDecisionNode = CreateDecisionNode("ConditionTwo", new Condition([]()->bool{return true; }), secondDecisionNode, nullptr);
 	decisionTreeComponent->SetRoot(firstDecisionNode);
 
 	CallMultipleUpdate(5);

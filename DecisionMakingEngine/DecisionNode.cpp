@@ -18,7 +18,7 @@ DecisionNode::~DecisionNode()
 
 void DecisionNode::ProcessNode(float dt)
 {
-	if (owner->GetConditionMethod(conditionName)())
+	if (owner->GetConditionMethod(conditionName)->GetResult())
 		truePathNode->ProcessNode(dt);
 	else
 		falsePathNode->ProcessNode(dt);

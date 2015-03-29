@@ -11,6 +11,12 @@ DecisionTreeComponent::DecisionTreeComponent(DecisionTreeNode* root)
 DecisionTreeComponent::~DecisionTreeComponent()
 {
 	delete root;
+
+	for (auto action : actions)
+		delete action.second;
+
+	for (auto condition : conditions)
+		delete condition.second;
 }
 
 bool DecisionTreeComponent::IsEmpty() const
@@ -35,15 +41,15 @@ void DecisionTreeComponent::Update(float dt)
 
 void DecisionTreeComponent::AddAction(ActionName actionName)
 {
-	actions[actionName] = nullptr;
+	actions.emplace(actionName, nullptr);
 }
 
-void DecisionTreeComponent::SetActionMethod(ActionName actionName, UpdateAction action)
+void DecisionTreeComponent::SetActionMethod(ActionName actionName, EveryUpdateCalledAction* action)
 {
 	actions[actionName] = action;
 }
 
-UpdateAction DecisionTreeComponent::GetActionMethod(ActionName actionName)
+const EveryUpdateCalledAction* DecisionTreeComponent::GetActionMethod(ActionName actionName)
 {
 	return actions[actionName];
 }
@@ -53,12 +59,12 @@ void DecisionTreeComponent::AddCondition(ConditionName conditionName)
 	conditions[conditionName] = nullptr;
 }
 
-void DecisionTreeComponent::SetConditionMethod(ConditionName conditionName, Condition condition)
+void DecisionTreeComponent::SetConditionMethod(ConditionName conditionName, Condition* condition)
 {
 	conditions[conditionName] = condition;
 }
 
-Condition DecisionTreeComponent::GetConditionMethod(ConditionName conditionName)
+const Condition* DecisionTreeComponent::GetConditionMethod(ConditionName conditionName)
 {
 	return conditions[conditionName];
 }

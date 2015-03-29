@@ -34,17 +34,17 @@ TEST_GROUP(FiniteStateComponentWithOneState)
 		CHECK_EQUAL(stateName, component.GetCurrentStateName());
 	}
 
-	void SetStateEntryAction(StateName stateName,ActionName actionName, DME::Action action)
+	void SetStateEntryAction(StateName stateName,ActionName actionName, DME::OneTimeCalledAction* action)
 	{
 		component.AddAction(actionName);
 		component.SetActionMethod(actionName, action);
 		component.SetStateEntryAction(stateName, actionName);
 	}
 	
-	void SetStateUpdateAction(StateName stateName, ActionName actionName, DME::UpdateAction action)
+	void SetStateUpdateAction(StateName stateName, ActionName actionName, DME::EveryUpdateCalledAction* action)
 	{
 		component.AddAction(actionName);
-		component.SetUpdateActionMethod(actionName, action);
+		component.SetActionMethod(actionName, action);
 		component.SetStateUpdateAction(stateName, actionName);
 	}
 };
@@ -91,7 +91,7 @@ TEST(FiniteStateComponentWithOneState, EntryActionIsExecutedOnFirstUpdate)
 {
 	bool isExecuted = false;
 	AddStateAndSetInitialState(theOnlyState);
-	SetStateEntryAction(theOnlyState, "EntryActionName", [&]()->void{isExecuted = true; });
+	SetStateEntryAction(theOnlyState, "EntryActionName", new OneTimeCalledAction([&]()->void{isExecuted = true; }));
 
 	component.Update();
 
@@ -104,7 +104,7 @@ TEST(FiniteStateComponentWithOneState, EntryActionIsExecutedOnlyOnce)
 	auto arbitrary = 4u;
 
 	AddStateAndSetInitialState(theOnlyState);
-	SetStateEntryAction(theOnlyState, "EntryActionName" , [&]()->void{ ++actionCallCount; });
+	SetStateEntryAction(theOnlyState, "EntryActionName" , new OneTimeCalledAction([&]()->void{ ++actionCallCount; }));
 
 	CallMultipleUpdate(arbitrary);
 
@@ -117,7 +117,7 @@ TEST(FiniteStateComponentWithOneState, UpdateActionIsExecutedOnEachUpdate)
 	auto numberOfUpdateCalls = 4u;
 
 	AddStateAndSetInitialState(theOnlyState);
-	SetStateUpdateAction(theOnlyState, "UpdateActionName" , [&](float dt)->void{ ++actionCallCount; });
+	SetStateUpdateAction(theOnlyState, "UpdateActionName" , new EveryUpdateCalledAction([&](float dt)->void{ ++actionCallCount; }));
 
 	CallMultipleUpdate(numberOfUpdateCalls);
 
@@ -128,7 +128,7 @@ TEST(FiniteStateComponentWithOneState, AcceptMemberFunctionForAction)
 {
 	GameObjectMock object;
 	AddStateAndSetInitialState(theOnlyState);
-	SetStateEntryAction(theOnlyState, "EntryActionName" , BIND_MEMBER_ACTION(GameObjectMock::EntryAction, &object));
+	SetStateEntryAction(theOnlyState, "EntryActionName" , new OneTimeCalledAction(BIND_MEMBER_ACTION(GameObjectMock::EntryAction, &object)));
 
 	component.Update();
 

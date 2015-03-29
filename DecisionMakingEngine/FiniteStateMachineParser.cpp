@@ -74,7 +74,7 @@ void FiniteStateMachineParser::ParseComponentStates(FiniteStateMachineComponent*
 
 		if (updateActionNode != nullptr)
 		{
-			component->AddUpdateAction(updateActionNode->value());
+			component->AddAction(updateActionNode->value());
 			component->SetStateUpdateAction(nameNode->value(), updateActionNode->value());
 		}
 

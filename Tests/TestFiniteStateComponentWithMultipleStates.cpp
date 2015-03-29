@@ -25,28 +25,28 @@ TEST_GROUP(FiniteStateComponentWithMultipleStates)
 			component.Update();
 	}
 
-	void SetStateEntryAction(StateName stateName, ActionName actionName, DME::Action action)
+	void SetStateEntryAction(StateName stateName, ActionName actionName, DME::OneTimeCalledAction* action)
 	{
 		component.AddAction(actionName);
 		component.SetActionMethod(actionName, action);
 		component.SetStateEntryAction(stateName, actionName);
 	}
 
-	void SetStateUpdateAction(StateName stateName, ActionName actionName, DME::UpdateAction action)
+	void SetStateUpdateAction(StateName stateName, ActionName actionName, DME::EveryUpdateCalledAction* action)
 	{
 		component.AddAction(actionName);
-		component.SetUpdateActionMethod(actionName, action);
+		component.SetActionMethod(actionName, action);
 		component.SetStateUpdateAction(stateName, actionName);
 	}
 
-	void SetStateExitAction(StateName stateName, ActionName actionName, DME::Action action)
+	void SetStateExitAction(StateName stateName, ActionName actionName, DME::OneTimeCalledAction* action)
 	{
 		component.AddAction(actionName);
 		component.SetActionMethod(actionName, action);
 		component.SetStateExitAction(stateName, actionName);
 	}
 
-	void SetTransition(StateName from, StateName to,ConditionName conditionName ,Condition condition)
+	void SetTransition(StateName from, StateName to,ConditionName conditionName ,Condition* condition)
 	{
 		component.AddCondition(conditionName);
 		component.SetConditionMethod(conditionName, condition);
@@ -71,7 +71,7 @@ TEST(FiniteStateComponentWithMultipleStates, CurrentStateIsTheInitialStateOnFirs
 
 TEST(FiniteStateComponentWithMultipleStates, StateIsNotChangedWhenTransitionConditionIsNotMet)
 {
-	SetTransition(firstState, secondState, "ConditionOne" ,[]()->bool{return false; });
+	SetTransition(firstState, secondState, "ConditionOne" ,new Condition([]()->bool{return false; }));
 
 	//On first Update component will go to initial state
 	component.Update();
@@ -83,7 +83,7 @@ TEST(FiniteStateComponentWithMultipleStates, StateIsNotChangedWhenTransitionCond
 
 TEST(FiniteStateComponentWithMultipleStates, StateIsChangedWhenTransitionConditionIsMet)
 {
-	SetTransition(firstState, secondState,"ConditionOne" ,[]()->bool{return true; });
+	SetTransition(firstState, secondState,"ConditionOne" ,new Condition([]()->bool{return true; }));
 
 	//On first Update component will go to initial state
 	component.Update();
@@ -94,7 +94,7 @@ TEST(FiniteStateComponentWithMultipleStates, StateIsChangedWhenTransitionConditi
 
 TEST(FiniteStateComponentWithMultipleStates, StateIsSetToInitialStateOnFirstUpdate)
 {
-	SetTransition(firstState, secondState, "ConditionOne", []()->bool{return true; });
+	SetTransition(firstState, secondState, "ConditionOne", new Condition([]()->bool{return true; }));
 
 	//On first Update component will go to initial state
 	component.Update();
@@ -103,7 +103,7 @@ TEST(FiniteStateComponentWithMultipleStates, StateIsSetToInitialStateOnFirstUpda
 
 TEST(FiniteStateComponentWithMultipleStates, StateIsNotChangedAfterTransition)
 {
-	SetTransition(firstState, secondState, "ConditionOne", []()->bool{return true; });
+	SetTransition(firstState, secondState, "ConditionOne", new Condition([]()->bool{return true; }));
 
 	//On first Update component will go to initial state
 	component.Update();
@@ -116,8 +116,8 @@ TEST(FiniteStateComponentWithMultipleStates, EntryActionForDestinationIsCalledOn
 {
 	bool isExecuted = false;
 
-	SetTransition(firstState, secondState, "ConditionOne", []()->bool{return true; });
-	SetStateEntryAction(secondState, "SecondEntryAction" , [&]()->void{isExecuted = true; });
+	SetTransition(firstState, secondState, "ConditionOne", new Condition([]()->bool{return true; }));
+	SetStateEntryAction(secondState, "SecondEntryAction" , new OneTimeCalledAction([&]()->void{isExecuted = true; }));
 
 	//On first Update component will go to initial state
 	component.Update();
@@ -130,8 +130,8 @@ TEST(FiniteStateComponentWithMultipleStates, ExistActionForSourceIsCalledOnState
 {
 	bool isExecuted = false;
 
-	SetTransition(firstState, secondState, "ConditionOne", []()->bool{return true; });
-	SetStateExitAction(firstState, "FirstExitAction" ,[&]()->void{isExecuted = true; });
+	SetTransition(firstState, secondState, "ConditionOne", new Condition([]()->bool{return true; }));
+	SetStateExitAction(firstState, "FirstExitAction" ,new OneTimeCalledAction([&]()->void{isExecuted = true; }));
 
 	//On first Update component will go to initial state
 	component.Update();
@@ -144,8 +144,8 @@ TEST(FiniteStateComponentWithMultipleStates, UpdateActionIsCallOnEachUpdateAfter
 {
 	auto callCount = 0u;
 
-	SetTransition(firstState, secondState, "ConditionOne", []()->bool{return true; });
-	SetStateUpdateAction(secondState, "SecondUpdateAction", [&](float dt)->void{++callCount; });
+	SetTransition(firstState, secondState, "ConditionOne", new Condition([]()->bool{return true; }));
+	SetStateUpdateAction(secondState, "SecondUpdateAction", new EveryUpdateCalledAction([&](float dt)->void{++callCount; }));
 
 	//On first Update component will go to initial state
 	component.Update();

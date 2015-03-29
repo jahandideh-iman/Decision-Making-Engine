@@ -29,13 +29,13 @@ void DecisionTreeEnemey::Initial(Player* player)
 {
 	DecisionTreeComponent * comp = new DecisionTreeComponent();
 
-	comp->SetActionMethod("FollowPlayer", BIND_MEMBER_UPDATE_ACTION(DecisionTreeEnemey::FollowPlayer, this));
-	comp->SetActionMethod("SearchForPlayer", BIND_MEMBER_UPDATE_ACTION(DecisionTreeEnemey::SearchForPlayer, this));
+	comp->SetActionMethod("FollowPlayer", new DME::EveryUpdateCalledAction(BIND_MEMBER_UPDATE_ACTION(DecisionTreeEnemey::FollowPlayer, this)));
+	comp->SetActionMethod("SearchForPlayer", new DME::EveryUpdateCalledAction(BIND_MEMBER_UPDATE_ACTION(DecisionTreeEnemey::SearchForPlayer, this)));
 
 	ActionNode* playerInRangeAction = new ActionNode(comp, "FollowPlayer");
 	ActionNode* playerNotInRangeAction = new ActionNode(comp, "SearchForPlayer");
 
-	comp->SetConditionMethod("IsPlayerInRange", BIND_MEMBER_ACTION(DecisionTreeEnemey::IsPlayerInRange, this));
+	comp->SetConditionMethod("IsPlayerInRange", new DME::Condition(BIND_MEMBER_ACTION(DecisionTreeEnemey::IsPlayerInRange, this)));
 	DecisionNode* InRangeQuery = new DecisionNode(comp,"IsPlayerInRange", playerInRangeAction, playerNotInRangeAction);
 
 	comp->SetRoot(InRangeQuery);

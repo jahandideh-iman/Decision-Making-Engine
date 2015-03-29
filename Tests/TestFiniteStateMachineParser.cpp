@@ -106,9 +106,9 @@ TEST(FiniteStateMachineParser, ComponentHasTheProvidedStateActions)
 		"    </States>"
 		"</DMEComponent>"));
 
-	CHECK_EQUAL("StateOneUpdateAction", comp->GetState("StateOne")->updateAction);
-	CHECK_EQUAL("StateOneEntryAction", comp->GetState("StateOne")->entryAction);
-	CHECK_EQUAL("StateOneExitAction", comp->GetState("StateOne")->exitAction);
+	CHECK_EQUAL("StateOneUpdateAction", comp->GetState("StateOne")->updateActionName);
+	CHECK_EQUAL("StateOneEntryAction", comp->GetState("StateOne")->entryActionName);
+	CHECK_EQUAL("StateOneExitAction", comp->GetState("StateOne")->exitActionName);
 }
 
 TEST(FiniteStateMachineParser, ComponentHasTheProvidedTransitions)
