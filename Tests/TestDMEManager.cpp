@@ -7,18 +7,18 @@
 #include "DMEUtilities.h"
 
 
-class DMEComponentUpdateCounterMock : public DMEComponent
+class DMEComponentUpdateCounterSpy : public DMEComponent
 {
 public:
 
-	~DMEComponentUpdateCounterMock()
+	~DMEComponentUpdateCounterSpy()
 	{
+	}
 
-	};
 	void Update(float dt)
 	{
 		++updateCount;
-	};
+	}
 
 	int updateCount = 0;
 };
@@ -29,13 +29,12 @@ public:
 
 	~DMEComponentDeltaTimeSpy()
 	{
-
-	};
+	}
 
 	void Update(float dt) override
 	{
 		lastDeltaTime = dt;
-	};
+	}
 
 	float lastDeltaTime = 0;
 };
@@ -46,6 +45,8 @@ TEST_GROUP(DMEManager)
 
 	std::stringbuf* tempBuf = nullptr;
 	std::istream* tempIStream = nullptr;
+
+	DMEComponent* parsedComponent = nullptr;
 
 	void CallMultipleUpdate(unsigned numberOfTimes)
 	{
@@ -63,6 +64,7 @@ TEST_GROUP(DMEManager)
 		DMEManager::Destroy();
 		SAFE_DELETE(tempBuf);
 		SAFE_DELETE(tempIStream);
+		SAFE_DELETE(parsedComponent);
 	}
 
 
@@ -94,7 +96,7 @@ TEST(DMEManager, IsNotEmptyOnAddComponent)
 
 TEST(DMEManager, ComponentIsUpdatedOnEachUpdate)
 {
-	DMEComponentUpdateCounterMock componentMock;
+	DMEComponentUpdateCounterSpy componentMock;
 	manager->AddComponent(&componentMock);
 
 	CallMultipleUpdate(5);
@@ -102,10 +104,10 @@ TEST(DMEManager, ComponentIsUpdatedOnEachUpdate)
 	CHECK_EQUAL(5, componentMock.updateCount);
 }
 
-TEST(DMEManager, MultipleComponentsIsUpdateOnEachUpdate)
+TEST(DMEManager, MultipleComponentsAreUpdatedOnEachUpdate)
 {
-	DMEComponentUpdateCounterMock componentMock1;
-	DMEComponentUpdateCounterMock componentMock2;
+	DMEComponentUpdateCounterSpy componentMock1;
+	DMEComponentUpdateCounterSpy componentMock2;
 	manager->AddComponent(&componentMock1);
 	manager->AddComponent(&componentMock2);
 
@@ -134,27 +136,23 @@ TEST(DMEManager, CreateNullComponentOnEmptyInput)
 
 TEST(DMEManager, CreateDecisionTreeComponentOnValidInput)
 {
-	DMEComponent* comp = DMEManager::Get()->CreateComponent(CreateStream(
+	parsedComponent = DMEManager::Get()->CreateComponent(CreateStream(
 		"<DMEComponent  type=\"DecisionTree\" >"
 		"</DMEComponent>"));
 
-	DecisionTreeComponent* decisionTreeComp = dynamic_cast<DecisionTreeComponent*> (comp);
+	DecisionTreeComponent* decisionTreeComp = dynamic_cast<DecisionTreeComponent*> (parsedComponent);
 
 	CHECK_TRUE(decisionTreeComp != nullptr);
-
-	delete comp;
 }
 
 TEST(DMEManager, CreateFiniteStateMachineComponentOnValidInput)
 {
-	DMEComponent* comp = DMEManager::Get()->CreateComponent(CreateStream(
+	parsedComponent = DMEManager::Get()->CreateComponent(CreateStream(
 		"<DMEComponent  type=\"FiniteStateMachine\" >"
 		"</DMEComponent>"));
 
-	FiniteStateMachineComponent* finiteStateMachineComp = dynamic_cast<FiniteStateMachineComponent*> (comp);
+	FiniteStateMachineComponent* finiteStateMachineComp = dynamic_cast<FiniteStateMachineComponent*> (parsedComponent);
 
 	CHECK_TRUE(finiteStateMachineComp != nullptr);
-
-	delete comp;
 }
 

@@ -4,16 +4,14 @@
 class DecisionTreeNodeDeltaTimeSpy : public DecisionTreeNode
 {
 public:
-
 	DecisionTreeNodeDeltaTimeSpy() : DecisionTreeNode(nullptr)
 	{
-
 	}
 
 	~DecisionTreeNodeDeltaTimeSpy()
 	{
-
 	}
+
 	void ProcessNode(float dt) override
 	{
 		lastDeltaTime = dt;

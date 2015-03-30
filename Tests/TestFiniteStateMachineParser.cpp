@@ -3,7 +3,6 @@
 #include "FiniteStateMachineParser.h"
 #include <sstream>
 
-#define SAFE_DELETE(pointer) {if (pointer) delete pointer; pointer = nullptr; }
 
 
 
@@ -12,21 +11,10 @@ TEST_GROUP(FiniteStateMachineParser)
 	FiniteStateMachineComponent* comp;
 	FiniteStateMachineParser parser;
 
-	std::stringbuf* tempBuf = nullptr;
-	std::istream* tempIStream = nullptr;
 
 	void teardown()
 	{
 		SAFE_DELETE(comp);
-		SAFE_DELETE(tempBuf);
-		SAFE_DELETE(tempIStream);
-	}
-
-	std::istream& CreateStream(string input)
-	{
-		tempBuf = new std::stringbuf(input);
-		tempIStream = new std::istream(tempBuf);
-		return  *(tempIStream);
 	}
 
 	void CheckHasTransition(string from, string to, string condition)
@@ -63,7 +51,6 @@ TEST(FiniteStateMachineParser, CreateEmptyComponentWithNoData)
 
 TEST(FiniteStateMachineParser, ComponentHasTheProvidedStates)
 {
-
 	comp = (FiniteStateMachineComponent*)parser.Create(
 		"<DMEComponent  type=\"FiniteStateMachine\" >"
 		"    <States>"
@@ -80,7 +67,6 @@ TEST(FiniteStateMachineParser, ComponentHasTheProvidedStates)
 
 TEST(FiniteStateMachineParser, ComponentHasTheProvidedInitialState)
 {
-
 	comp = (FiniteStateMachineComponent*)parser.Create(
 		"<DMEComponent  type=\"FiniteStateMachine\" >"
 		"    <States>"

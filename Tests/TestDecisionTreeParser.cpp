@@ -14,11 +14,21 @@ TEST_GROUP(DecisionTreeParser)
 	DecisionTreeComponent* comp;
 	DecisionTreeParser parser;
 
-
 	void teardown()
 	{
 		SAFE_DELETE(comp);
+	}
 
+	void CheckActionNode(ActionName expectedActionName, const DecisionTreeNode* node)
+	{
+		CHECK_TRUE(dynamic_cast<const ActionNode*>(node) != nullptr);
+		CHECK_TRUE(dynamic_cast<const ActionNode*>(node)->GetActionName() == expectedActionName);
+	}
+
+	void CheckDecisionNode(ConditionName expectedConditionName, const DecisionTreeNode* node)
+	{
+		CHECK_TRUE(dynamic_cast<const DecisionNode*>(node) != nullptr);
+		CHECK_TRUE(dynamic_cast<const DecisionNode*>(node)->GetConditionName() == expectedConditionName);
 	}
 
 };
@@ -48,9 +58,8 @@ TEST(DecisionTreeParser, ComponentHasTheProvidedActionNodeAsRoot)
 		"     </Node>"
 		"</DMEComponent>");
 
-	CHECK_TRUE(comp->GetRoot() != nullptr);
-	CHECK_TRUE(dynamic_cast<const ActionNode*>(comp->GetRoot()) != nullptr);
-	CHECK_TRUE(dynamic_cast<const ActionNode*>(comp->GetRoot())->GetActionName() == "ActionName");
+	CheckActionNode("ActionName", comp->GetRoot());
+
 }
 
 TEST(DecisionTreeParser, ComponentHasTheProvidedDecisionNodeAsRoot)
@@ -62,9 +71,7 @@ TEST(DecisionTreeParser, ComponentHasTheProvidedDecisionNodeAsRoot)
 		"     </Node>"
 		"</DMEComponent>");
 
-	CHECK_TRUE(comp->GetRoot() != nullptr);
-	CHECK_TRUE(dynamic_cast<const DecisionNode*>(comp->GetRoot()) != nullptr);
-	CHECK_TRUE(dynamic_cast<const DecisionNode*>(comp->GetRoot())->GetConditionName() == "ConditionName");
+	CheckDecisionNode("ConditionName", comp->GetRoot());
 }
 
 TEST(DecisionTreeParser, ComponentHasTheProvidedTrueAndFalsePathChild)
@@ -87,14 +94,9 @@ TEST(DecisionTreeParser, ComponentHasTheProvidedTrueAndFalsePathChild)
 		"</DMEComponent>");
 
 	const DecisionNode* root = dynamic_cast<const DecisionNode*>(comp->GetRoot());
-	const ActionNode* truePathNode = dynamic_cast<const ActionNode*>(root->GetTruePathNode());
-	const ActionNode* falsePathNode = dynamic_cast<const ActionNode*>(root->GetFalsePathNode());
 
-	CHECK_TRUE(truePathNode != nullptr);
-	CHECK_TRUE(truePathNode->GetActionName() == "TrueAction");
-	
-	CHECK_TRUE(falsePathNode != nullptr);
-	CHECK_TRUE(falsePathNode->GetActionName() == "FalseAction");
+	CheckActionNode("TrueAction", root->GetTruePathNode());
+	CheckActionNode("FalseAction", root->GetFalsePathNode());
 }
 
 TEST(DecisionTreeParser, IntegrationTest)
@@ -127,23 +129,10 @@ TEST(DecisionTreeParser, IntegrationTest)
 		"</DMEComponent>");
 
 	const DecisionNode* root = dynamic_cast<const DecisionNode*>(comp->GetRoot());
-	const ActionNode* firstTruePathNode = dynamic_cast<const ActionNode*>(root->GetTruePathNode());
-	const DecisionNode* firstFalsePathNode = dynamic_cast<const DecisionNode*>(root->GetFalsePathNode());
+	const DecisionNode* secondDecisionNode = dynamic_cast<const DecisionNode*>(root->GetFalsePathNode());
 
-	const ActionNode* secondTruePathNode = dynamic_cast<const ActionNode*>(firstFalsePathNode->GetTruePathNode());
-	const ActionNode* secondFalsePathNode = dynamic_cast<const ActionNode*>(firstFalsePathNode->GetFalsePathNode());
-
-
-
-	CHECK_TRUE(firstTruePathNode != nullptr);
-	CHECK_TRUE(firstTruePathNode->GetActionName() == "FirstTrueAction");
-
-	CHECK_TRUE(firstFalsePathNode != nullptr);
-	CHECK_TRUE(firstFalsePathNode->GetConditionName() == "FalsePathCondition");
-
-	CHECK_TRUE(secondTruePathNode != nullptr);
-	CHECK_TRUE(secondTruePathNode->GetActionName() == "SecondTrueAction");
-
-	CHECK_TRUE(secondFalsePathNode != nullptr);
-	CHECK_TRUE(secondFalsePathNode->GetActionName() == "SecondFalseAction");
+	CheckActionNode("FirstTrueAction", root->GetTruePathNode());
+	CheckDecisionNode("FalsePathCondition", root->GetFalsePathNode());
+	CheckActionNode("SecondTrueAction", secondDecisionNode->GetTruePathNode());
+	CheckActionNode("SecondFalseAction", secondDecisionNode->GetFalsePathNode());
 }

@@ -8,10 +8,8 @@
 class DecisionNodeDeltaTimeSpy : public DecisionNode
 {
 public:
-	DecisionNodeDeltaTimeSpy(DecisionTreeComponent*owner)
-		:DecisionNode(owner)
+	DecisionNodeDeltaTimeSpy(DecisionTreeComponent*owner):DecisionNode(owner)
 	{
-
 	}
 
 	void ProcessNode(float dt) override
@@ -78,7 +76,6 @@ TEST(DecisionTreeComponent, RootIsExecutedOnUpdateIfItIsAnActionNode)
 	CallMultipleUpdate(5);
 
 	CHECK_EQUAL(5, callCount);
-
 }
 
 TEST(DecisionTreeComponent, TruePathIsExecutedOnUpdateIfNodeConditionIsMet)
@@ -92,7 +89,6 @@ TEST(DecisionTreeComponent, TruePathIsExecutedOnUpdateIfNodeConditionIsMet)
 	CallMultipleUpdate(5);
 
 	CHECK_EQUAL(5, callCount);
-
 }
 
 TEST(DecisionTreeComponent, FalsePathIsExecutedOnUpdateIfNodeConditionIsNotMet)
@@ -130,6 +126,3 @@ TEST(DecisionTreeComponent, IntegerationTest)
 
 	CHECK_EQUAL(5, callCount);
 }
-
-
-

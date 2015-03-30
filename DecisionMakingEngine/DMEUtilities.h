@@ -7,6 +7,7 @@ using std::placeholders::_1;
 
 #define SAFE_DELETE(pointer) {if (pointer) delete pointer; pointer = nullptr; }
 
+
 class CharArrayWrapper
 {
 public:
