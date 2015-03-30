@@ -10,23 +10,20 @@ FiniteStateMachineComponent::FiniteStateMachineComponent()
 
 FiniteStateMachineComponent::~FiniteStateMachineComponent()
 {
-	for (auto action : actions)
-		delete action.second;
-
-	for (auto condition : conditions)
-		delete condition.second;
-	
+	DELETE_MAP_CONTAINER(states);
+	DELETE_MAP_CONTAINER(actions);
+	DELETE_MAP_CONTAINER(conditions);
 }
 
 void FiniteStateMachineComponent::AddState(StateName stateName)
 {
-	states.emplace(stateName,  State(stateName));
+	states.emplace(stateName,  new State(stateName));
 }
 
 
-FiniteStateMachineComponent::State* FiniteStateMachineComponent::GetState(StateName stateName)
+const FiniteStateMachineComponent::State* FiniteStateMachineComponent::GetState(StateName stateName) const
 {
-	return &states[stateName];
+	return states.find(stateName)->second;
 }
 
 void FiniteStateMachineComponent::Update(float dt)
@@ -43,7 +40,7 @@ void FiniteStateMachineComponent::ProcessCurrentStateTransitions()
 {
 	if (IsTheFirstUpdate())
 	{
-		GoToState(&states[initialStateName]);
+		GoToState(states[initialStateName]);
 		return;
 	}
 		
@@ -52,7 +49,7 @@ void FiniteStateMachineComponent::ProcessCurrentStateTransitions()
 		if (conditions[t.conditionName]->GetResult() == true)
 		{
 			GoToState(t.destinationState);
-			break;
+			return;
 		}
 	}
 
@@ -79,7 +76,6 @@ void FiniteStateMachineComponent::CallExitActionFor(State* state)
 				dynamic_cast<OneTimeCalledAction*> (action)->Invoke();
 			}
 		}
-
 	}
 }
 
@@ -123,17 +119,17 @@ StateName FiniteStateMachineComponent::GetCurrentStateName()
 
 void FiniteStateMachineComponent::SetStateEntryAction(StateName stateName, ActionName action)
 {
-	states[stateName].entryActionName = action;
+	states[stateName]->entryActionName = action;
 }
 
 void FiniteStateMachineComponent::SetStateUpdateAction(StateName stateName, ActionName action)
 {
-	states[stateName].updateActionName = action;
+	states[stateName]->updateActionName = action;
 }
 
 void FiniteStateMachineComponent::SetStateExitAction(StateName stateName, ActionName action)
 {
-	states[stateName].exitActionName = action;
+	states[stateName]->exitActionName = action;
 }
 
 bool FiniteStateMachineComponent::HasState(StateName stateName)
@@ -160,7 +156,7 @@ void FiniteStateMachineComponent::AddCondition(ConditionName conditionName)
 
 void FiniteStateMachineComponent::AddTransition(StateName from, StateName to, ConditionName conditionName)
 {
-	states[from].transitions.emplace_back(StateTransition(&states[to], conditionName));
+	states[from]->transitions.emplace_back(StateTransition(states[to], conditionName));
 }
 
 void FiniteStateMachineComponent::SetConditionMethod(ConditionName conditionName, Condition* condition)

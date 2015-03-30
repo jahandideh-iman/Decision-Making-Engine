@@ -9,12 +9,6 @@ using namespace rapidxml;
 using namespace std;
 
 
-#define TYPE_ATTRIBUTE "type"
-#define TYPE_NAME "FiniteStateMachine"
-#define STATES_ELEMENT "States"
-#define STATE_ELEMENT "State"
-#define STATE_NAME_ELEMENT "Name"
-
 class FiniteStateMachineParser: public DMEComponentParser
 {
 public:
@@ -23,15 +17,19 @@ public:
 
 protected:
 
-	DMEComponent* CreateWithData(xml_node<> * rootNode) override;
+	DMEComponent* CreateWithValidData(XMLNode* rootXMLNode) override;
 
 private:
 
+	void ParseStates(FiniteStateMachineComponent* component, XMLNode* rootXMLNode);
+	void ParseState(FiniteStateMachineComponent* component, XMLNode * stateNode);
+	void ParseStateEntryAction(FiniteStateMachineComponent* component, StateName stateName, XMLNode* entryActionXMLNode);
+	void ParseStateUpdateAction(FiniteStateMachineComponent* component, StateName stateName, XMLNode* updateActionXMLNode);
+	void ParseStateExitAction(FiniteStateMachineComponent* component, StateName stateName, XMLNode* exitActionXMLNode);
 
+	void ParseTransitions(FiniteStateMachineComponent* component, XMLNode* rootXMLNode);
+	void ParseTransition(FiniteStateMachineComponent* component, XMLNode * transitionNode);
 
-	void ParseComponentStates(FiniteStateMachineComponent* component, xml_node<> * rootNode);
-	void ParseComponentTransitions(FiniteStateMachineComponent* component, xml_node<> * rootNode);
-	void ParseComponentInitialState(FiniteStateMachineComponent* component, xml_node<>* rootNode);
-
+	void ParseInitialState(FiniteStateMachineComponent* component, XMLNode* rootXMLNode);
 };
 

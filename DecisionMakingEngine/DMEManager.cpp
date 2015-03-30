@@ -37,7 +37,7 @@ void DMEManager::Destroy()
 	manager = nullptr;
 }
 
-bool DMEManager::isEmpty()
+bool DMEManager::IsEmpty() const
 {
 	return components.empty();
 }
@@ -48,8 +48,7 @@ DMEComponent* DMEManager::CreateComponent(std::istream &stream)
 	
 	for (auto parser : parsers)
 	{
-		DMEComponent* comp;
-		comp = parser->Create(data);
+		DMEComponent* comp = parser->Create(data);
 		if (comp != nullptr)
 			return comp;
 	}

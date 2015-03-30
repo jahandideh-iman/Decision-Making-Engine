@@ -20,7 +20,7 @@ TEST_GROUP(FiniteStateMachineParser)
 	void CheckHasTransition(string from, string to, string condition)
 	{
 		bool hasTransition = false;
-		FiniteStateMachineComponent::State* sourceState = comp->GetState(from);
+		const FiniteStateMachineComponent::State* sourceState = comp->GetState(from);
 		for (const FiniteStateMachineComponent::StateTransition& t : sourceState->transitions)
 		{
 			if (t.destinationState->name == to && t.conditionName == condition)

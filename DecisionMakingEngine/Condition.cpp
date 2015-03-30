@@ -2,12 +2,10 @@
 
 namespace DME
 {
-
 	Condition::Condition(Method method)
 	{
 		this->method = method;
 	}
-
 
 	Condition::~Condition()
 	{

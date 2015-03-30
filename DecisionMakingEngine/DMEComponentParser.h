@@ -6,13 +6,35 @@
 
 using namespace rapidxml;
 
-#define ROOT_XML_NODE "DMEComponent"
-
-
 typedef xml_node<> XMLNode;
+typedef xml_attribute<> XMLAttribute;
 
 class DMEComponentParser
 {
+	class CharArrayWrapper
+	{
+	public:
+		CharArrayWrapper(std::string& str)
+		{
+			unsigned length = str.length() + 1;
+			cstr = new char[length];
+			strcpy_s(cstr, length, str.c_str());
+		}
+
+		~CharArrayWrapper()
+		{
+			delete[] cstr;
+		}
+
+		char* Get()
+		{
+			return cstr;
+		}
+
+	private:
+		char *cstr = nullptr;
+	};
+
 public:
 	DMEComponentParser();
 	virtual ~DMEComponentParser();
@@ -20,14 +42,13 @@ public:
 	virtual DMEComponent* Create(std::string rawData) ;
 
 protected:
-	virtual DMEComponent* CreateWithData(XMLNode* rootXMLNode) = 0;
+	virtual DMEComponent* CreateWithValidData(XMLNode* rootXMLNode) = 0;
 
 	std::string typeName = "";
 private:
 	XMLNode* GetRootXMLNode(char* rawData);
+
 	bool IsDataValid(XMLNode* rootXMLNode);
-
-
-
+	bool IsTypeMatched(XMLNode* rootXMLNode);
 };
 

@@ -1,6 +1,7 @@
 #include "DecisionTreeComponent.h"
 //TODO: Find out why I can't include this in the header file
 #include "DecisionTreeNode.h"
+#include <assert.h>
 
 DecisionTreeComponent::DecisionTreeComponent(DecisionTreeNode* root)
 {
@@ -10,13 +11,9 @@ DecisionTreeComponent::DecisionTreeComponent(DecisionTreeNode* root)
 
 DecisionTreeComponent::~DecisionTreeComponent()
 {
-	delete root;
-
-	for (auto action : actions)
-		delete action.second;
-
-	for (auto condition : conditions)
-		delete condition.second;
+	SAFE_DELETE(root);
+	DELETE_MAP_CONTAINER(actions);
+	DELETE_MAP_CONTAINER(conditions);
 }
 
 bool DecisionTreeComponent::IsEmpty() const
@@ -49,9 +46,10 @@ void DecisionTreeComponent::SetActionMethod(ActionName actionName, EveryUpdateCa
 	actions[actionName] = action;
 }
 
-const EveryUpdateCalledAction* DecisionTreeComponent::GetActionMethod(ActionName actionName)
+const EveryUpdateCalledAction* DecisionTreeComponent::GetActionMethod(ActionName actionName) const
 {
-	return actions[actionName];
+	assert(actions.find(actionName) != actions.end());
+	return actions.find(actionName)->second;
 }
 
 void DecisionTreeComponent::AddCondition(ConditionName conditionName)
@@ -64,8 +62,9 @@ void DecisionTreeComponent::SetConditionMethod(ConditionName conditionName, Cond
 	conditions[conditionName] = condition;
 }
 
-const Condition* DecisionTreeComponent::GetConditionMethod(ConditionName conditionName)
+const Condition* DecisionTreeComponent::GetConditionMethod(ConditionName conditionName) const
 {
-	return conditions[conditionName];
+	assert(conditions.find(conditionName) != conditions.end());
+	return conditions.find(conditionName)->second;
 }
 

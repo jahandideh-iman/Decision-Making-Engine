@@ -9,7 +9,7 @@
 #include "DMEComponentParser.h"
 
 using namespace rapidxml;
-using namespace std;
+
 
 class DecisionTreeParser : public DMEComponentParser
 {
@@ -18,10 +18,18 @@ public:
 	~DecisionTreeParser();
 
 protected:
-	DMEComponent* CreateWithData(xml_node<> * rootNode) override;
+	DMEComponent* CreateWithValidData(XMLNode* rootXMLNode) override;
 
 private:
-	static DecisionTreeNode* ParseComponentNode(DecisionTreeComponent* component, xml_node<>* treeNode);
+	DecisionTreeNode* ExtractNode(DecisionTreeComponent* component, XMLNode* xmlNode);
+	std::string GetNodeType(XMLNode* xmlNode);
+
+	DecisionTreeNode* ExtractActionNode(DecisionTreeComponent* component, XMLNode* xmlNode);
+
+	DecisionTreeNode* ExtractDecisionNode(DecisionTreeComponent* component, XMLNode* xmlNode);
+	void ParseDecisionNodeFalsePathNode(DecisionNode* decisionNode, DecisionTreeComponent* component, XMLNode* xmlNode);
+	void ParseDecisionNodeTruePathNode(DecisionNode* decisionNode, DecisionTreeComponent* component, XMLNode* xmlNode);
+	void ParseDecisionNodeCondition(DecisionNode* decisionNode, XMLNode* xmlNode);
 
 };
 

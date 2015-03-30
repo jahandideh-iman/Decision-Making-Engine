@@ -13,77 +13,91 @@ FiniteStateMachineParser::~FiniteStateMachineParser()
 
 
 
-DMEComponent* FiniteStateMachineParser::CreateWithData(xml_node<> * rootNode)
+DMEComponent* FiniteStateMachineParser::CreateWithValidData(XMLNode* rootXMLNode)
 {
 	FiniteStateMachineComponent* component = new FiniteStateMachineComponent();
 
-	ParseComponentStates(component, rootNode);
-	ParseComponentTransitions(component, rootNode);
-	ParseComponentInitialState(component, rootNode);
+	ParseStates(component, rootXMLNode);
+	ParseTransitions(component, rootXMLNode);
+	ParseInitialState(component, rootXMLNode);
 
 	return component;
 }
 
-void FiniteStateMachineParser::ParseComponentStates(FiniteStateMachineComponent* component, xml_node<> * rootNode)
+void FiniteStateMachineParser::ParseStates(FiniteStateMachineComponent* component, XMLNode* rootXMLNode)
 {
-	xml_node<> * statesNode = rootNode->first_node(STATES_ELEMENT);
-	if (statesNode == nullptr)
+	XMLNode* statesXMLNode = rootXMLNode->first_node("States");
+	if (statesXMLNode == nullptr)
 		return;
 
-	for (xml_node<> *stateNode = statesNode->first_node(STATE_ELEMENT);
-		stateNode; stateNode = stateNode->next_sibling(STATE_ELEMENT))
+	for (XMLNode* stateXMLNode = statesXMLNode->first_node("State"); 
+		stateXMLNode; stateXMLNode = stateXMLNode->next_sibling("State"))
+		ParseState(component, stateXMLNode);
+
+}
+
+
+void FiniteStateMachineParser::ParseState(FiniteStateMachineComponent* component, XMLNode * stateXMLNode)
+{
+	StateName stateName = stateXMLNode->first_node("Name")->value();
+	component->AddState(stateName);
+
+	ParseStateEntryAction(component, stateName, stateXMLNode->first_node("EntryAction"));
+	ParseStateUpdateAction(component, stateName, stateXMLNode->first_node("UpdateAction"));
+	ParseStateExitAction(component, stateName, stateXMLNode->first_node("ExitAction"));
+}
+
+void FiniteStateMachineParser::ParseStateEntryAction(FiniteStateMachineComponent* component, StateName stateName, XMLNode* entryActionXMLNode)
+{
+	if (entryActionXMLNode != nullptr)
 	{
-		xml_node<>* nameNode = stateNode->first_node(STATE_NAME_ELEMENT);
-		xml_node<>* entryActionNode = stateNode->first_node("EntryAction");
-		xml_node<>* updateActionNode = stateNode->first_node("UpdateAction");
-		xml_node<>* exitActionNode = stateNode->first_node("ExitAction");
-
-		
-
-		component->AddState(nameNode->value());
-		if (entryActionNode != nullptr)
-		{
-			component->AddAction(entryActionNode->value());
-			component->SetStateEntryAction(nameNode->value(), entryActionNode->value());
-		}
-
-		if (updateActionNode != nullptr)
-		{
-			component->AddAction(updateActionNode->value());
-			component->SetStateUpdateAction(nameNode->value(), updateActionNode->value());
-		}
-
-		if (exitActionNode != nullptr)
-		{
-			component->AddAction(exitActionNode->value());
-			component->SetStateExitAction(nameNode->value(), exitActionNode->value());
-		}
-
+		component->AddAction(entryActionXMLNode->value());
+		component->SetStateEntryAction(stateName, entryActionXMLNode->value());
 	}
 }
 
-void FiniteStateMachineParser::ParseComponentTransitions(FiniteStateMachineComponent* component, xml_node<> * rootNode)
+void FiniteStateMachineParser::ParseStateUpdateAction(FiniteStateMachineComponent* component, StateName stateName, XMLNode* updateActionXMLNode)
 {
-	xml_node<> * transitionsNode = rootNode->first_node("Transitions");
+	if (updateActionXMLNode != nullptr)
+	{
+		component->AddAction(updateActionXMLNode->value());
+		component->SetStateUpdateAction(stateName, updateActionXMLNode->value());
+	}
+}
+
+void FiniteStateMachineParser::ParseStateExitAction(FiniteStateMachineComponent* component, StateName stateName, XMLNode* exitActionXMLNode)
+{
+	if (exitActionXMLNode != nullptr)
+	{
+		component->AddAction(exitActionXMLNode->value());
+		component->SetStateExitAction(stateName, exitActionXMLNode->value());
+	}
+}
+
+void FiniteStateMachineParser::ParseTransitions(FiniteStateMachineComponent* component, XMLNode * rootNode)
+{
+	XMLNode * transitionsNode = rootNode->first_node("Transitions");
 	if (transitionsNode == nullptr)
 		return;
 
-	for (xml_node<> *transitionNode = transitionsNode->first_node("Transition");
+	for (XMLNode *transitionNode = transitionsNode->first_node("Transition");
 		transitionNode; transitionNode = transitionNode->next_sibling("Transition"))
-	{
-		xml_node<>* fromNode = transitionNode->first_node("From");
-		xml_node<>* toNode = transitionNode->first_node("To");
-		xml_node<>* conditionNode = transitionNode->first_node("Condition");
-
-		component->AddTransition(fromNode->value(), toNode->value(), conditionNode->value());
-		component->AddCondition(conditionNode->value());
-	}
+		ParseTransition(component, transitionNode);
 }
 
-
-void FiniteStateMachineParser::ParseComponentInitialState(FiniteStateMachineComponent* component, xml_node<>* rootNode)
+void FiniteStateMachineParser::ParseTransition(FiniteStateMachineComponent* component, XMLNode* transitionXMLNode)
 {
-	xml_node<> * initialStateNode = rootNode->first_node("InitialState");
+	XMLNode* fromXMLNode = transitionXMLNode->first_node("From");
+	XMLNode* toXMLNode = transitionXMLNode->first_node("To");
+	XMLNode* conditionXMLNode = transitionXMLNode->first_node("Condition");
+
+	component->AddTransition(fromXMLNode->value(), toXMLNode->value(), conditionXMLNode->value());
+	component->AddCondition(conditionXMLNode->value());
+}
+
+void FiniteStateMachineParser::ParseInitialState(FiniteStateMachineComponent* component, XMLNode* rootNode)
+{
+	XMLNode * initialStateNode = rootNode->first_node("InitialState");
 	if (initialStateNode == nullptr)
 		return;
 

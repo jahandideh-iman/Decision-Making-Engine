@@ -1,6 +1,5 @@
 #pragma once
 #include "DecisionTreeNode.h"
-#include <functional>
 
 #include "DMEDefines.h"
 #include "DMEUtilities.h"
@@ -8,15 +7,12 @@
  
 using DME::ConditionName;
 using DME::Condition;
-using std::function;
-
-
 
 class DecisionNode :
 	public DecisionTreeNode
 {
 public:
-	DecisionNode(DecisionTreeComponent* owner = nullptr, ConditionName conditionName = "", DecisionTreeNode* truePathNode = nullptr, DecisionTreeNode* falsePathNode = nullptr);
+	DecisionNode(DecisionTreeComponent* owner, ConditionName conditionName = "", DecisionTreeNode* truePathNode = nullptr, DecisionTreeNode* falsePathNode = nullptr);
 	~DecisionNode();
 
 	void ProcessNode(float dt) override;

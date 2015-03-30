@@ -5,6 +5,7 @@
 #include <vector>
 #include "DMEComponent.h"
 #include "DMEDefines.h"
+#include "DMEUtilities.h"
 #include "Action.h"
 #include "OneTimeCalledAction.h"
 #include "EveryUpdateCalledAction.h"
@@ -61,7 +62,7 @@ public:
 	};
 
 
-	typedef map<StateName, State> StateContainer;
+	typedef map<StateName, State*> StateContainer;
 	typedef map<ActionName, DME::Action*> ActionContainer;
 	typedef map<ConditionName, Condition*> ConditionContainer;
 
@@ -73,26 +74,25 @@ public:
 
 	void AddState(StateName stateName);
 	void SetInitialState(StateName stateName);
+	StateName GetCurrentStateName();
 	StateName GetInitialStateName() const;
+	const State* GetState(StateName stateName) const;
+
 
 	void AddCondition(ConditionName conditionName);
-	void AddTransition(StateName from, StateName to, ConditionName conditionName);
 	void SetConditionMethod(ConditionName conditionName, Condition* condition);
 
 	void AddAction(ActionName actionName);
-
 	void SetActionMethod(ActionName actionName, DME::Action* action);
 
 	void SetStateEntryAction(StateName stateName, ActionName action);
 	void SetStateUpdateAction(StateName stateName, ActionName action);
 	void SetStateExitAction(StateName stateName, ActionName action);
 
-	StateName GetCurrentStateName();
+	void AddTransition(StateName from, StateName to, ConditionName conditionName);
 
 	bool HasState(StateName stateName);
 	bool HasNoState();
-
-	State* GetState(StateName stateName);
 
 private:
 	void ProcessCurrentStateTransitions();
@@ -102,8 +102,7 @@ private:
 	void CallEntryActionFor(State* state);
 	void CallUpdateActionFor(State* state, float dt);
 
-	bool FiniteStateMachineComponent::IsTheFirstUpdate();
-
+	bool IsTheFirstUpdate();
 
 private:
 

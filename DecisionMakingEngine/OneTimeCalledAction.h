@@ -15,7 +15,6 @@ namespace DME
 		~OneTimeCalledAction();
 
 		void Invoke();
-
 	private:
 		Method method = nullptr;
 	};

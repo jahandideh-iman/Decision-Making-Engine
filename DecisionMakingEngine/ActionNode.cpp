@@ -1,31 +1,29 @@
 #include "ActionNode.h"
 
 
-ActionNode::ActionNode(DecisionTreeComponent* owner, ActionName updateActionName) : DecisionTreeNode(owner)
+ActionNode::ActionNode(DecisionTreeComponent* owner, ActionName actionName) : DecisionTreeNode(owner)
 {
-	this->updateActionName = updateActionName;
+	SetActionName(actionName);
 }
-
 
 ActionNode::~ActionNode()
 {
 }
 
-void ActionNode::SetActionName(ActionName updateActionName)
+void ActionNode::SetActionName(ActionName actionName)
 {
-	owner->IsEmpty();
-	this->updateActionName = updateActionName;
+	this->actionName = actionName;
 }
 
 void ActionNode::ProcessNode(float dt)
 {
-	if (updateActionName == "")
+	if (actionName == "")
 		return;
 
-	owner->GetActionMethod(updateActionName)->Invoke(dt);
+	owner->GetActionMethod(actionName)->Invoke(dt);
 }
 
 ActionName ActionNode::GetActionName() const
 {
-	return updateActionName;
+	return actionName;
 }

@@ -12,55 +12,75 @@ DecisionTreeParser::~DecisionTreeParser()
 }
 
 
-DMEComponent* DecisionTreeParser::CreateWithData(xml_node<> * rootNode)
+DMEComponent* DecisionTreeParser::CreateWithValidData(XMLNode* rootXMLNode)
 {
 	DecisionTreeComponent* component = new DecisionTreeComponent();
-	xml_node<>* treeRootNode = rootNode->first_node("Node");
 
-	component->SetRoot(ParseComponentNode(component, treeRootNode));
+	XMLNode* treeRootXMLNode = rootXMLNode->first_node("Node");
+	component->SetRoot(ExtractNode(component, treeRootXMLNode));
 
 	return component;
 }
 
-
-
-
-
-DecisionTreeNode* DecisionTreeParser::ParseComponentNode(DecisionTreeComponent* component, xml_node<>* treeNode)
+DecisionTreeNode* DecisionTreeParser::ExtractNode(DecisionTreeComponent* component, XMLNode* xmlNode)
 {
-	if (treeNode == nullptr)
+	if (xmlNode == nullptr)
 		return nullptr;
 
-	string nodeType = treeNode->first_attribute("type")->value();
+	std::string nodeType = GetNodeType(xmlNode);
+
 	if (nodeType == "ActionNode")
-	{
-		ActionNode* node = new ActionNode(component);
-		xml_node<>* actionNode = treeNode->first_node("Action");
-		if (actionNode != nullptr)
-			node->SetActionName(actionNode->value());
-		return node;
-	}
-	if (nodeType == "DecisionNode")
-	{
-		DecisionNode* root = new DecisionNode(component);
-		xml_node<>* conditionNode = treeNode->first_node("Condition");
-		if (conditionNode != nullptr)
-			root->SetConditionName(conditionNode->value());
+		return ExtractActionNode(component, xmlNode);
+	else if (nodeType == "DecisionNode")
+		return ExtractDecisionNode(component, xmlNode);
 
-		xml_node<>* truePathNode = treeNode->first_node("TruePath");
-		if (truePathNode != nullptr)
-		{
-			root->SetTruePathNode(ParseComponentNode(component, truePathNode->first_node("Node")));
-		}
-
-		xml_node<>* falsePathNode = treeNode->first_node("FalsePath");
-		if (falsePathNode != nullptr)
-		{
-			root->SetFalsePathNode(ParseComponentNode(component, falsePathNode->first_node("Node")));
-		}
-
-		return root;
-
-	}
 	return nullptr;
 }
+
+std::string DecisionTreeParser::GetNodeType(XMLNode* xmlNode)
+{
+	return xmlNode->first_attribute("type")->value();
+}
+
+DecisionTreeNode* DecisionTreeParser::ExtractActionNode(DecisionTreeComponent* component, XMLNode* xmlNode)
+{
+	ActionNode* actionNode = new ActionNode(component);
+	XMLNode* actionXMLNode = xmlNode->first_node("Action");
+	if (actionXMLNode != nullptr)
+		actionNode->SetActionName(actionXMLNode->value());
+	return actionNode;
+}
+
+DecisionTreeNode* DecisionTreeParser::ExtractDecisionNode(DecisionTreeComponent* component, XMLNode* xmlNode)
+{
+	DecisionNode* decisionNode = new DecisionNode(component);
+
+	ParseDecisionNodeCondition(decisionNode, xmlNode);
+	ParseDecisionNodeTruePathNode(decisionNode, component, xmlNode);
+	ParseDecisionNodeFalsePathNode(decisionNode, component, xmlNode);
+
+	return decisionNode;
+}
+
+void DecisionTreeParser::ParseDecisionNodeCondition(DecisionNode* decisionNode, XMLNode* xmlNode)
+{
+	XMLNode* conditionXMLNode = xmlNode->first_node("Condition");
+	if (conditionXMLNode != nullptr)
+		decisionNode->SetConditionName(conditionXMLNode->value());
+}
+
+void DecisionTreeParser::ParseDecisionNodeTruePathNode(DecisionNode* decisionNode, DecisionTreeComponent* component, XMLNode* xmlNode)
+{
+	XMLNode* truePathNode = xmlNode->first_node("TruePath");
+	if (truePathNode != nullptr)
+		decisionNode->SetTruePathNode(ExtractNode(component, truePathNode->first_node("Node")));
+}
+
+void DecisionTreeParser::ParseDecisionNodeFalsePathNode(DecisionNode* decisionNode, DecisionTreeComponent* component, XMLNode* xmlNode)
+{
+	XMLNode* falsePathNode = xmlNode->first_node("FalsePath");
+	if (falsePathNode != nullptr)
+		decisionNode->SetFalsePathNode(ExtractNode(component, falsePathNode->first_node("Node")));
+}
+
+

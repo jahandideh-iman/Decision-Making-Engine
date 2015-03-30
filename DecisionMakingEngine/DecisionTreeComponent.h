@@ -3,6 +3,7 @@
 #include <map>
 #include "DMEComponent.h"
 #include "DMEDefines.h"
+#include "DMEUtilities.h"
 #include "Condition.h"
 #include "EveryUpdateCalledAction.h"
 
@@ -25,16 +26,15 @@ public:
 	void Update(float dt = 0) override;
 
 	void SetRoot(DecisionTreeNode* root);
-
 	const DecisionTreeNode* GetRoot() const; 
 
 	void AddAction(ActionName actionName);
 	void SetActionMethod(ActionName actionName, EveryUpdateCalledAction* action);
-	const EveryUpdateCalledAction* GetActionMethod(ActionName actionName);
+	const EveryUpdateCalledAction* GetActionMethod(ActionName actionName) const;
 
 	void AddCondition(ConditionName conditionName);	
 	void SetConditionMethod(ConditionName conditionName, Condition* condition);
-	const Condition* GetConditionMethod(ConditionName conditionName);
+	const Condition* GetConditionMethod(ConditionName conditionName) const;
 
 	bool IsEmpty() const;
 

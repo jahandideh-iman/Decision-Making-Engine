@@ -16,7 +16,7 @@ DMEComponent* DMEComponentParser::Create(std::string rawData)
 	XMLNode* rootXMLNode = GetRootXMLNode(wrapper.Get());
 
 	if (IsDataValid(rootXMLNode))
-		return CreateWithData(rootXMLNode);
+		return CreateWithValidData(rootXMLNode);
 
 	return nullptr;
 }
@@ -25,17 +25,22 @@ xml_node<>* DMEComponentParser::GetRootXMLNode(char* rawData)
 {
 	xml_document<> xmlData;
 	xmlData.parse<0>(rawData);
-	return xmlData.first_node(ROOT_XML_NODE);
+	return xmlData.first_node("DMEComponent");
 }
 
-
-bool DMEComponentParser::IsDataValid(xml_node<> * rootXMLNode)
+bool DMEComponentParser::IsDataValid(XMLNode* rootXMLNode)
 {
 	if (rootXMLNode != nullptr)
-	{
-		xml_attribute<>* typeAttr = rootXMLNode->first_attribute("type");
-		if (typeAttr != nullptr && strcmp(typeAttr->value(), typeName.c_str()) == 0)
-			return true;
-	}
+		return IsTypeMatched(rootXMLNode);
+
+	return false;
+}
+
+bool DMEComponentParser::IsTypeMatched(XMLNode* rootXMLNode)
+{
+	XMLAttribute* typeAttr = rootXMLNode->first_attribute("type");
+	if (typeAttr != nullptr && strcmp(typeAttr->value(), typeName.c_str()) == 0)
+		return true;
+
 	return false;
 }

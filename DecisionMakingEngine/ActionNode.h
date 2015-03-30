@@ -2,22 +2,21 @@
 #include "DecisionTreeNode.h"
 #include "DMEDefines.h"
 
-using DME::ActionName;
 
 class ActionNode :
 	public DecisionTreeNode
 {
 
 public:
-	ActionNode(DecisionTreeComponent* owner, ActionName updateAction = "");
+	ActionNode(DecisionTreeComponent* owner, DME::ActionName actionName = "");
 	~ActionNode();
 
-	void SetActionName(ActionName updateAction);
-	ActionName GetActionName() const;
+	void SetActionName(DME::ActionName actionName);
+	DME::ActionName GetActionName() const;
 
 	void ProcessNode(float dt) override;
 
 private:
-	ActionName updateActionName;
+	DME::ActionName actionName;
 };
 

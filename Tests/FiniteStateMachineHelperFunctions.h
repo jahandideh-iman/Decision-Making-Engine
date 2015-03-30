@@ -1,6 +1,6 @@
 #pragma once
 
-#include "FiniteStateMachineComponent.h";
+#include "FiniteStateMachineComponent.h"
 #include "CppUTest/TestHarness.h"
 
 

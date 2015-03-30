@@ -11,7 +11,7 @@ namespace DME
 	{
 		typedef std::function<void(float)> Method;
 	public:
-		EveryUpdateCalledAction(Method method = nullptr);
+		EveryUpdateCalledAction(Method method);
 		~EveryUpdateCalledAction();
 
 		void Invoke(float dt) const;

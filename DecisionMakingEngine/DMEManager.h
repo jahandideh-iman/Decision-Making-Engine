@@ -2,20 +2,15 @@
 
 #include "DMEComponent.h"
 #include <vector>
-#include "rapidxml-1.13/rapidxml.hpp"
 #include "DMEUtilities.h"
 #include "DMEComponentParser.h"
 #include "FiniteStateMachineParser.h"
 #include "DecisionTreeParser.h"
 
 
-using namespace rapidxml;
-using namespace std;
-
 class DMEManager
 {
 	typedef vector<DMEComponent*> ComponentContainer;
-
 	typedef vector<DMEComponentParser*> ParserContainer;
 
 public:
@@ -23,12 +18,11 @@ public:
 	static void Destroy();
 
 	void AddComponent(DMEComponent* component);
-
 	DMEComponent* CreateComponent(std::istream &stream);
 
 	void Update(float dt = 0);
 
-	bool isEmpty();
+	bool IsEmpty() const;
 
 private:
 	DMEManager();
@@ -38,7 +32,6 @@ private:
 
 	void InitialDefaultParsers();
 
-	
 private:
 	static DMEManager* manager;
 	ComponentContainer components;

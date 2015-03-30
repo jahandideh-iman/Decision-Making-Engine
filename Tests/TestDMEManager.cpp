@@ -83,7 +83,7 @@ TEST(DMEManager, IsSingleton)
 
 TEST(DMEManager, IsEmptyOnCreation)
 {
-	CHECK_TRUE(manager->isEmpty());
+	CHECK_TRUE(manager->IsEmpty());
 }
 
 TEST(DMEManager, IsNotEmptyOnAddComponent)
@@ -91,7 +91,7 @@ TEST(DMEManager, IsNotEmptyOnAddComponent)
 	DecisionTreeComponent component;
 	manager->AddComponent(&component);
 
-	CHECK_FALSE(manager->isEmpty());
+	CHECK_FALSE(manager->IsEmpty());
 }
 
 TEST(DMEManager, ComponentIsUpdatedOnEachUpdate)
