@@ -18,6 +18,9 @@ public:
 	static void Destroy();
 
 	void AddComponent(DMEComponent* component);
+
+	DMEComponent* CreateComponentFromFile(std::string fileName);
+	//Note: This function is public for testing
 	DMEComponent* CreateComponent(std::istream &stream);
 
 	void Update(float dt = 0);

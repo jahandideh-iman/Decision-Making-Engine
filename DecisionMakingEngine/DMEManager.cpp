@@ -1,4 +1,5 @@
 #include "DMEManager.h"
+#include <fstream>
 
 DMEManager* DMEManager::manager = nullptr;
 
@@ -41,6 +42,19 @@ bool DMEManager::IsEmpty() const
 {
 	return components.empty();
 }
+
+
+DMEComponent* DMEManager::CreateComponentFromFile(std::string fileName)
+{
+
+	std::ifstream file;
+	FileGuard fg(file);
+	file.open(fileName);
+	if (file.is_open())
+		return CreateComponent(file);
+	return nullptr;
+}
+
 
 DMEComponent* DMEManager::CreateComponent(std::istream &stream)
 {
