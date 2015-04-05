@@ -1,0 +1,15 @@
+<DMEComponent type="DecisionTree">
+	<Node type="DecisionNode">
+		<Condition>IsPlayerInRange</Condition>
+		<TruePath>
+			<Node type="ActionNode" >
+				<Action>FollowPlayer</Action>
+			</Node>
+		</TruePath>
+		<FalsePath>
+			<Node type="ActionNode" >
+				<Action>SearchForPlayer</Action>
+			</Node>
+		</FalsePath>
+	</Node>
+</DMEComponent>

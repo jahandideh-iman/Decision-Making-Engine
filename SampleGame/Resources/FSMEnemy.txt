@@ -1,0 +1,25 @@
+<DMEComponent type="FiniteStateMachine">
+	<States>
+		<State>
+			<Name>Searching</Name>
+			<UpdateAction>SearchForPlayer</UpdateAction>
+		</State>
+		<State>
+			<Name>Following</Name>
+			<UpdateAction>FollowPlayer</UpdateAction>
+		</State>
+	</States>
+	<Transitions>
+		<Transition>
+			<From>Searching</From>
+			<To>Following</To>
+			<Condition>IsPlayerInRange</Condition>
+		</Transition>
+		<Transition>
+			<From>Following</From>
+			<To>Searching</To>
+			<Condition>IsPlayerOutOfRange</Condition>
+		</Transition>
+	</Transitions>
+	<InitialState>Searching</InitialState>
+</DMEComponent>

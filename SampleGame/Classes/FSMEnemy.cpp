@@ -29,26 +29,13 @@ FSMEnemy* FSMEnemy::Create(CCPoint initialPos, Player* player)
 void FSMEnemy::Initial(Player* player)
 {
 
-	FiniteStateMachineComponent* comp = new FiniteStateMachineComponent();
-	comp->AddState("Searching");
-	comp->AddState("Following");
-	comp->SetInitialState("Searching");
-	comp->AddAction("SearchForPlayer");
-	comp->AddAction("FollowPlayer");
-
-	comp->AddCondition("IsPlayerInRange");
-	comp->AddCondition("IsPlayerOutOfRange");
+	FiniteStateMachineComponent* comp = (FiniteStateMachineComponent*) DMEManager::Get()->CreateComponentFromFile("FSMEnemy.txt");
 
 	comp->SetActionMethod("SearchForPlayer", new EveryUpdateCalledAction(BIND_MEMBER_UPDATE_ACTION(FSMEnemy::SearchForPlayer, this)));
 	comp->SetActionMethod("FollowPlayer", new EveryUpdateCalledAction(BIND_MEMBER_UPDATE_ACTION(FSMEnemy::FollowPlayer, this)));
 
 	comp->SetConditionMethod("IsPlayerInRange", new Condition(BIND_MEMBER_ACTION(FSMEnemy::IsPlayerInRange, this)));
 	comp->SetConditionMethod("IsPlayerOutOfRange", new Condition(BIND_MEMBER_ACTION(FSMEnemy::IsPlayerOutOfRange, this)));
-	
-	comp->AddTransition("Searching", "Following", "IsPlayerInRange");
-	comp->AddTransition("Following", "Searching", "IsPlayerOutOfRange");
-	comp->SetStateUpdateAction("Searching", "SearchForPlayer");
-	comp->SetStateUpdateAction("Following", "FollowPlayer");
 
 	DMEManager::Get()->AddComponent(comp);
 
