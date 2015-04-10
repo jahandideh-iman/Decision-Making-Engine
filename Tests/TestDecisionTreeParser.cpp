@@ -74,6 +74,36 @@ TEST(DecisionTreeParser, ComponentHasTheProvidedDecisionNodeAsRoot)
 	CheckDecisionNode("ConditionName", comp->GetRoot());
 }
 
+TEST(DecisionTreeParser, TruePathIsNullIfThereIsNoNodeInTruePathElement)
+{
+	comp = (DecisionTreeComponent*)parser.Create(
+		"<DMEComponent  type=\"DecisionTree\" >"
+		"     <Node type=\"DecisionNode\" >"
+		"           <Condition>ConditionName</Condition>"
+		"           <TruePath></TruePath>"
+		"     </Node>"
+		"</DMEComponent>");
+
+	const DecisionNode* root = dynamic_cast<const DecisionNode*>(comp->GetRoot());
+
+	POINTERS_EQUAL(nullptr, root->GetTruePathNode());
+}
+
+TEST(DecisionTreeParser, FalsePathIsNullIfThereIsNoNodeInFalsePathElement)
+{
+	comp = (DecisionTreeComponent*)parser.Create(
+		"<DMEComponent  type=\"DecisionTree\" >"
+		"     <Node type=\"DecisionNode\" >"
+		"           <Condition>ConditionName</Condition>"
+		"           <FalsePath></FalsePath>"
+		"     </Node>"
+		"</DMEComponent>");
+
+	const DecisionNode* root = dynamic_cast<const DecisionNode*>(comp->GetRoot());
+
+	POINTERS_EQUAL(nullptr, root->GetFalsePathNode());
+}
+
 TEST(DecisionTreeParser, ComponentHasTheProvidedTrueAndFalsePathChild)
 {
 	comp = (DecisionTreeComponent*) parser.Create(
