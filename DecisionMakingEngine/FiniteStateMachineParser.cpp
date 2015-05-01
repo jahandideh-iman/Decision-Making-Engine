@@ -17,6 +17,7 @@ DMEComponent* FiniteStateMachineParser::CreateWithValidData(XMLNode* rootXMLNode
 {
 	FiniteStateMachineComponent* component = new FiniteStateMachineComponent();
 
+	//TODO: change input of prase method from rootXMLNode to their needed xmlNode (i.e. stateXMLNode)
 	ParseStates(component, rootXMLNode);
 	ParseTransitions(component, rootXMLNode);
 	ParseInitialState(component, rootXMLNode);

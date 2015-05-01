@@ -25,8 +25,8 @@ private:
 	std::string GetNodeType(XMLNode* xmlNode);
 
 	DecisionTreeNode* ExtractActionNode(DecisionTreeComponent* component, XMLNode* xmlNode);
-
 	DecisionTreeNode* ExtractDecisionNode(DecisionTreeComponent* component, XMLNode* xmlNode);
+
 	void ParseDecisionNodeFalsePathNode(DecisionNode* decisionNode, DecisionTreeComponent* component, XMLNode* xmlNode);
 	void ParseDecisionNodeTruePathNode(DecisionNode* decisionNode, DecisionTreeComponent* component, XMLNode* xmlNode);
 	void ParseDecisionNodeCondition(DecisionNode* decisionNode, XMLNode* xmlNode);
