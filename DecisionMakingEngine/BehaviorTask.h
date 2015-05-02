@@ -1,10 +1,17 @@
 #pragma once
+
+enum TaskResult
+{
+	None, Unfinished, Success, Failure,
+};
+
 class BehaviorTask
 {
+
 public:
 	BehaviorTask();
 	virtual ~BehaviorTask();
 
-	virtual void ProcessTask(float dt) = 0;
+	virtual TaskResult ProcessTask(float dt) = 0;
 };
 

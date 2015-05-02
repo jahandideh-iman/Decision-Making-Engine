@@ -9,10 +9,12 @@ public:
 	SequenceTask();
 	~SequenceTask();
 
-	void ProcessTask(float dt) override;
+	TaskResult ProcessTask(float dt) override;
 	void AddTask(BehaviorTask *task);
 
 private:
 	std::vector<BehaviorTask *> tasks;
+
+	unsigned currentTaskIndex = 0u;
 };
 

@@ -9,7 +9,7 @@ using namespace DME;
 
 class EmptyBehvaiorTask : public BehaviorTask
 {
-	void ProcessTask(float dt) override {};
+	TaskResult ProcessTask(float dt) override { return Success; };
 };
 
 TEST_GROUP(BehaviorTreeComponent)
@@ -49,27 +49,10 @@ TEST(BehaviorTreeComponent, IsNotEmptyAfterSettingRoot)
 TEST(BehaviorTreeComponent, RootIsExecutedOnUpdateIfItIsAnActionTask)
 {
 	unsigned callCount = 0u;
-	auto task  = new ActionTask ([&](float dt)->bool{ ++callCount; return true; });
+	auto task  = new ActionTask ([&](float dt)->TaskResult{ ++callCount; return Success; });
 	component->SetRoot(task);
 
 	CallMultipleUpdate(5);
 
 	CHECK_EQUAL(5, callCount);
-}
-
-TEST(BehaviorTreeComponent, SequenceTaskExecutedAllItsChildrenIfTheyAreAllSuccessful)
-{
-	unsigned callCount = 0u;
-	auto action = [&](float dt)->bool{ ++callCount; return true; };
-
-	auto sequenceTask = new SequenceTask();
-	sequenceTask->AddTask(new ActionTask(action));
-	sequenceTask->AddTask(new ActionTask(action));
-	sequenceTask->AddTask(new ActionTask(action));
-
-	component->SetRoot(sequenceTask);
-
-	component->Update();
-
-	CHECK_EQUAL(3, callCount);
 }

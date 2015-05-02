@@ -12,8 +12,8 @@ ActionTask::~ActionTask()
 	//delete action;
 }
 
-void ActionTask::ProcessTask(float dt)
+TaskResult ActionTask::ProcessTask(float dt)
 {
 	if (action != nullptr)
-		action(dt);
+		return action(dt);
 }

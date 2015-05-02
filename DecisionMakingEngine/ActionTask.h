@@ -7,12 +7,12 @@ using std::function;
 class ActionTask :
 	public BehaviorTask
 {
-	typedef std::function<bool(float)> Action;
+	typedef std::function<TaskResult(float)> Action;
 public:
 	ActionTask(Action action);
 	~ActionTask();
 
-	void ProcessTask(float dt) override;
+	TaskResult ProcessTask(float dt) override;
 
 private:
 	Action action = nullptr;
