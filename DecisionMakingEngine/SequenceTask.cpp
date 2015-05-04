@@ -21,15 +21,20 @@ TaskResult SequenceTask::ProcessTask(float dt)
 		if (taskResult != TaskResult::Success)
 		{
 			if (taskResult == TaskResult::Failure)
-				currentTaskIndex = 0; // restart tasks
+				RestartTasksIndex();
 			return taskResult;
 		}
 	}
-	currentTaskIndex = 0;
+	RestartTasksIndex();
 	return TaskResult::Success;
 }
 
 void SequenceTask::AddTask(BehaviorTask *task)
 {
 	tasks.push_back(task);
+}
+
+void SequenceTask::RestartTasksIndex()
+{
+	currentTaskIndex = 0;
 }
