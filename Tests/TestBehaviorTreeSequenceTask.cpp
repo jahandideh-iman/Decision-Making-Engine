@@ -1,50 +1,8 @@
 #include "CppUTest/TestHarness.h"
 #include "BehaviorTreeComponent.h"
 #include "SequenceTask.h"
-#include "ActionTask.h"
+#include "BehaviorTaskMockClasses.h"
 #include <vector>
-
-class MockTask : public BehaviorTask
-{
-public:
-	bool isCalled = false;
-	unsigned callCount = 0;
-
-	virtual TaskResult ProcessTask(float dt) = 0;
-};
-class SuccessfulMockTask : public MockTask
-{
-public:
-	TaskResult ProcessTask(float dt)
-	{
-		callCount++;
-		isCalled = true;
-		return TaskResult::Success;
-	}
-
-};
-
-class FailedMockTask : public MockTask
-{
-public:
-	TaskResult ProcessTask(float dt)
-	{
-		callCount++;
-		isCalled = true;
-		return TaskResult::Failure;
-	}
-};
-
-class UnfinishedMockTask : public MockTask
-{
-public:
-	TaskResult ProcessTask(float dt)
-	{
-		callCount++;
-		isCalled = true;
-		return TaskResult::Unfinished;
-	}
-};
 
 
 TEST_GROUP(SequenceTask)
@@ -81,7 +39,7 @@ TEST_GROUP(SequenceTask)
 
 };
 
-TEST(SequenceTask, ReturnSuccessIfAllTaskAreSuccessful)
+TEST(SequenceTask, ReturnsSuccessIfAllTaskAreSuccessful)
 {
 	tasksVector.emplace_back(new SuccessfulMockTask());
 	tasksVector.emplace_back(new SuccessfulMockTask());
@@ -93,7 +51,7 @@ TEST(SequenceTask, ReturnSuccessIfAllTaskAreSuccessful)
 	CHECK_EQUAL(result, TaskResult::Success);
 }
 
-TEST(SequenceTask, ReturnFailureIfOneChildIsFailed)
+TEST(SequenceTask, ReturnsFailureIfOneChildIsFailed)
 {
 	tasksVector.emplace_back(new SuccessfulMockTask());
 	tasksVector.emplace_back(new FailedMockTask());
@@ -105,7 +63,7 @@ TEST(SequenceTask, ReturnFailureIfOneChildIsFailed)
 	CHECK_EQUAL(result, TaskResult::Failure);
 }
 
-TEST(SequenceTask, ReturnUnfinishedIfOneChildIsNotFinished)
+TEST(SequenceTask, ReturnsUnfinishedIfOneChildIsNotFinished)
 {
 	tasksVector.emplace_back(new SuccessfulMockTask());
 	tasksVector.emplace_back(new UnfinishedMockTask());
