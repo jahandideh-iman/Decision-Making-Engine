@@ -4,6 +4,7 @@
 #include "ActionTask.h"
 #include "SequenceTask.h"
 #include "EveryUpdateCalledAction.h"
+#include "BehaviorTreeComponentTestBase.h"
 
 using namespace DME;
 
@@ -12,25 +13,8 @@ class EmptyBehvaiorTask : public BehaviorTask
 	TaskResult ProcessTask(float dt) override { return Success; };
 };
 
-TEST_GROUP(BehaviorTreeComponent)
+TEST_GROUP_BASE(BehaviorTreeComponent,BehaviorTreeComponentTestBase)
 {
-	BehaviorTreeComponent *component;
-	void setup()
-	{
-		component = new BehaviorTreeComponent();
-	}
-
-	void teardown()
-	{
-		delete component;
-	}
-
-	void CallMultipleUpdate(unsigned numberOfTimes)
-	{
-		for (unsigned i = 0; i < numberOfTimes; ++i)
-			component->Update(0.5);
-	}
-
 };
 
 TEST(BehaviorTreeComponent, IsEmptyOnCreation)

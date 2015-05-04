@@ -2,39 +2,28 @@
 #include "BehaviorTreeComponent.h"
 #include "SequenceTask.h"
 #include "BehaviorTaskMockClasses.h"
+#include "BehaviorTreeComponentTestBase.h"
 #include <vector>
 
 
-TEST_GROUP(SequenceTask)
+TEST_GROUP_BASE(SequenceTask,BehaviorTreeComponentTestBase) 
 {
-	BehaviorTreeComponent *component;
 	SequenceTask *sequenceTask;
 
 	std::vector<MockTask *> tasksVector;
 
-	void setup()
+	void setup() override
 	{
-		component = new BehaviorTreeComponent();
+		BehaviorTreeComponentTestBase::setup();
 		sequenceTask = new SequenceTask();
 
 		component->SetRoot(sequenceTask);
-	}
-
-	void teardown()
-	{
-		delete component;
 	}
 
 	void AddTaskVectorToSequenceTask()
 	{
 		for (auto task : tasksVector)
 			sequenceTask->AddTask(task);
-	}
-
-	void CallMultipleUpdate(unsigned numberOfTimes)
-	{
-		for (unsigned i = 0; i < numberOfTimes; ++i)
-			component->Update(0.5);
 	}
 
 };

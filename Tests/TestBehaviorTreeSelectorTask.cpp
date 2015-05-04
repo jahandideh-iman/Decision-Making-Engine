@@ -2,15 +2,15 @@
 #include "BehaviorTreeComponent.h"
 #include "SelectorTask.h"
 #include "BehaviorTaskMockClasses.h"
+#include "BehaviorTreeComponentTestBase.h"
 
-TEST_GROUP(SelectorTask)
+TEST_GROUP_BASE(SelectorTask, BehaviorTreeComponentTestBase)
 {
 
 };
 
 TEST(SelectorTask, ReturnsFailIfAllTasksFail)
 {
-	auto component = new BehaviorTreeComponent();
 
 	auto selectorTask = new SelectorTask();
 	selectorTask->AddTask(new FailedMockTask());
@@ -21,6 +21,5 @@ TEST(SelectorTask, ReturnsFailIfAllTasksFail)
 
 	CHECK_EQUAL(TaskResult::Failure, taskResult);
 
-	delete component;
 	delete selectorTask;
 }
