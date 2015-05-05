@@ -92,20 +92,6 @@ TEST(SequenceTask, ChildernAfterAFaildTaskAreNotCalledInSignleUpdate)
 	CHECK_FALSE(tasksVector[2]->isCalled);
 }
 
-TEST(SequenceTask, TasksAreCalledFromTheBeginingOnUpdateIfATaskIsFailed)
-{
-	tasksVector.emplace_back(new SuccessfulMockTask());
-	tasksVector.emplace_back(new FailedMockTask());
-	tasksVector.emplace_back(new SuccessfulMockTask());
-	AddTaskVectorToSequenceTask();
-
-	CallMultipleUpdate(5);
-
-	CHECK_EQUAL(5,tasksVector[0]->callCount);
-	CHECK_EQUAL(5, tasksVector[1]->callCount);
-	CHECK_EQUAL(0, tasksVector[2]->callCount);
-}
-
 TEST(SequenceTask, ChildernAfterAnUnfinishedTaskAreNotCalledInSignleUpdate)
 {
 	tasksVector.emplace_back(new SuccessfulMockTask());
@@ -118,6 +104,20 @@ TEST(SequenceTask, ChildernAfterAnUnfinishedTaskAreNotCalledInSignleUpdate)
 	CHECK_TRUE(tasksVector[0]->isCalled);
 	CHECK_TRUE(tasksVector[1]->isCalled);
 	CHECK_FALSE(tasksVector[2]->isCalled);
+}
+
+TEST(SequenceTask, TasksAreCalledFromTheBeginingOnUpdateIfATaskIsFailed)
+{
+	tasksVector.emplace_back(new SuccessfulMockTask());
+	tasksVector.emplace_back(new FailedMockTask());
+	tasksVector.emplace_back(new SuccessfulMockTask());
+	AddTaskVectorToSequenceTask();
+
+	CallMultipleUpdate(5);
+
+	CHECK_EQUAL(5,tasksVector[0]->callCount);
+	CHECK_EQUAL(5, tasksVector[1]->callCount);
+	CHECK_EQUAL(0, tasksVector[2]->callCount);
 }
 
 TEST(SequenceTask, TasksAreCalledFromTheUnfinishedTaskOnUpdateIfATaskIsNotFinished)
