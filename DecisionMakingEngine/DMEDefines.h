@@ -9,4 +9,5 @@ namespace DME
 	typedef std::string StateName;
 	typedef std::string ActionName;
 	typedef std::string ConditionName;
+
 }

@@ -1,9 +1,11 @@
 #include "ActionTask.h"
+#include "BehaviorTreeComponent.h"
 
 
-ActionTask::ActionTask(Action action)
+ActionTask::ActionTask(BehaviorTreeComponent* owner, DME::ActionName actionName)
 {
-	this->action = action;
+	this->owner = owner;
+	this->actionName = actionName;
 }
 
 
@@ -14,6 +16,8 @@ ActionTask::~ActionTask()
 
 TaskResult ActionTask::ProcessTask(float dt)
 {
-	if (action != nullptr)
-		return action(dt);
+	if (actionName == "")
+		return TaskResult::None;
+
+	return owner->GetActionMethod(actionName)->Invoke(dt);
 }

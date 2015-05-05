@@ -1,5 +1,4 @@
 #include "CppUTest/TestHarness.h"
-#include "BehaviorTreeComponent.h"
 #include "SelectorTask.h"
 #include "BehaviorTaskMockClasses.h"
 #include "BehaviorTreeComponentTestBase.h"

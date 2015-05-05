@@ -1,6 +1,5 @@
 #include "SequenceTask.h"
 
-
 SequenceTask::SequenceTask()
 {
 }

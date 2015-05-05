@@ -1,17 +1,6 @@
-#include "CppUTest/TestHarness.h"
-#include "BehaviorTreeComponent.h"
-#include "BehaviorTask.h"
-#include "ActionTask.h"
-#include "SequenceTask.h"
-#include "EveryUpdateCalledAction.h"
 #include "BehaviorTreeComponentTestBase.h"
+#include "BehaviorTaskMockClasses.h"
 
-using namespace DME;
-
-class EmptyBehvaiorTask : public BehaviorTask
-{
-	TaskResult ProcessTask(float dt) override { return Success; };
-};
 
 TEST_GROUP_BASE(BehaviorTreeComponent,BehaviorTreeComponentTestBase)
 {
@@ -24,19 +13,17 @@ TEST(BehaviorTreeComponent, IsEmptyOnCreation)
 
 TEST(BehaviorTreeComponent, IsNotEmptyAfterSettingRoot)
 {
-	auto task = new EmptyBehvaiorTask();
-	component->SetRoot(task);
+	component->SetRoot(new MockTask());
 
 	CHECK_FALSE(component->IsEmpty());
 }
 
-TEST(BehaviorTreeComponent, RootIsExecutedOnUpdateIfItIsAnActionTask)
+TEST(BehaviorTreeComponent, RootIsExecutedOnUpdate)
 {
-	unsigned callCount = 0u;
-	auto task  = new ActionTask ([&](float dt)->TaskResult{ ++callCount; return Success; });
+	auto task = new MockTask();
 	component->SetRoot(task);
 
 	CallMultipleUpdate(5);
 
-	CHECK_EQUAL(5, callCount);
+	CHECK_EQUAL(5, task->callCount);
 }
