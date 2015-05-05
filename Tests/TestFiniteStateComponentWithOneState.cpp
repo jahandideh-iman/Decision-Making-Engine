@@ -2,7 +2,7 @@
 #include "CppUTest/TestHarness.h"
 #include "FiniteStateMachineComponent.h"
 #include "DMEUtilities.h"
-#include "FiniteStateMachineHelperFunctions.h"
+#include "FiniteStateComponentTestBase.h"
 
 
 class GameObjectMock
@@ -14,20 +14,9 @@ public:
 	bool isEntryActionCalled = false;
 };
 
-TEST_GROUP(FiniteStateComponentWithOneState)
+TEST_GROUP_BASE(FiniteStateComponentWithOneState,FiniteStateComponentTestBase)
 {
-	FiniteStateMachineComponent* component = nullptr;
 	StateName theOnlyStateName = "OnlyState";
-
-	void setup()
-	{
-		component = new FiniteStateMachineComponent();
-	}
-
-	void teardown()
-	{
-		delete component;
-	}
 
 	void AddStateAndSetInitialState(StateName stateName)
 	{
@@ -53,7 +42,7 @@ TEST(FiniteStateComponentWithOneState, CurrentStateIsEmptyOnCreation)
 {
 	component->AddState(theOnlyStateName);
 
-	CheckCurrentStateNameIs(component,"");
+	CheckCurrentStateNameIs("");
 }
 
 TEST(FiniteStateComponentWithOneState, CurrentStateIsTheOnlyStateAfterFirstUpdate)
@@ -61,16 +50,16 @@ TEST(FiniteStateComponentWithOneState, CurrentStateIsTheOnlyStateAfterFirstUpdat
 	AddStateAndSetInitialState(theOnlyStateName);
 	component->Update();
 
-	CheckCurrentStateNameIs(component, theOnlyStateName);
+	CheckCurrentStateNameIs(theOnlyStateName);
 }
 
 TEST(FiniteStateComponentWithOneState, StateIsNotChangeAfterTick)
 {
 	AddStateAndSetInitialState(theOnlyStateName);
 	
-	CallMultipleUpdate(component, 5);
+	CallMultipleUpdate(5);
 
-	CheckCurrentStateNameIs(component, theOnlyStateName);
+	CheckCurrentStateNameIs(theOnlyStateName);
 }
 
 
@@ -79,7 +68,7 @@ TEST(FiniteStateComponentWithOneState, EntryActionIsExecutedOnFirstUpdate)
 {
 	bool isExecuted = false;
 	AddStateAndSetInitialState(theOnlyStateName);
-	SetStateEntryAction(component, theOnlyStateName, "EntryActionName", new OneTimeCalledAction([&]()->void{isExecuted = true; }));
+	SetStateEntryAction(theOnlyStateName, "EntryActionName", new OneTimeCalledAction([&]()->void{isExecuted = true; }));
 
 	component->Update();
 
@@ -91,9 +80,9 @@ TEST(FiniteStateComponentWithOneState, EntryActionIsExecutedOnlyOnce)
 	auto actionCallCount = 0u;
 
 	AddStateAndSetInitialState(theOnlyStateName);
-	SetStateEntryAction(component, theOnlyStateName, "EntryActionName", new OneTimeCalledAction([&]()->void{ ++actionCallCount; }));
+	SetStateEntryAction(theOnlyStateName, "EntryActionName", new OneTimeCalledAction([&]()->void{ ++actionCallCount; }));
 
-	CallMultipleUpdate(component, 5);
+	CallMultipleUpdate(5);
 
 	CHECK_EQUAL(1, actionCallCount);
 }
@@ -103,9 +92,9 @@ TEST(FiniteStateComponentWithOneState, UpdateActionIsExecutedOnEachUpdate)
 	auto actionCallCount = 0u;
 
 	AddStateAndSetInitialState(theOnlyStateName);
-	SetStateUpdateAction(component, theOnlyStateName, "UpdateActionName", new EveryUpdateCalledAction([&](float dt)->void{ ++actionCallCount; }));
+	SetStateUpdateAction(theOnlyStateName, "UpdateActionName", new EveryUpdateCalledAction([&](float dt)->void{ ++actionCallCount; }));
 
-	CallMultipleUpdate(component, 4);
+	CallMultipleUpdate(4);
 
 	CHECK_EQUAL(4, actionCallCount);
 }
@@ -114,7 +103,7 @@ TEST(FiniteStateComponentWithOneState, AcceptMemberFunctionForAction)
 {
 	GameObjectMock object;
 	AddStateAndSetInitialState(theOnlyStateName);
-	SetStateEntryAction(component, theOnlyStateName, "EntryActionName", new OneTimeCalledAction(BIND_MEMBER_ACTION(GameObjectMock::EntryAction, &object)));
+	SetStateEntryAction(theOnlyStateName, "EntryActionName", new OneTimeCalledAction(BIND_MEMBER_ACTION(GameObjectMock::EntryAction, &object)));
 
 	component->Update();
 
