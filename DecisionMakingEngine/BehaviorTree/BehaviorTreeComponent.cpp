@@ -1,6 +1,6 @@
 #include "BehaviorTreeComponent.h"
 #include <cassert>
-#include "DMEUtilities.h"
+#include "Core/DMEUtilities.h"
 
 using namespace DME;
 

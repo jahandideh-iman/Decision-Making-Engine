@@ -1,9 +1,7 @@
 #include "CppUTest/TestHarness.h"
-#include "FiniteStateMachineComponent.h"
-#include "FiniteStateMachineParser.h"
+#include "FiniteStateMachine/FiniteStateMachineComponent.h"
+#include "FiniteStateMachine/FiniteStateMachineParser.h"
 #include <sstream>
-
-
 
 
 TEST_GROUP(FiniteStateMachineParser)

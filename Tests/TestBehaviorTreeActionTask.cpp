@@ -1,5 +1,5 @@
 #include "BehaviorTreeComponentTestBase.h"
-#include "ActionTask.h"
+#include "BehaviorTree/ActionTask.h"
 
 TEST_GROUP_BASE(ActionTask, BehaviorTreeComponentTestBase)
 {

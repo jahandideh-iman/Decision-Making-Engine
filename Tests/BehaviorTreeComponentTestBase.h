@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CppUTest/TestHarness.h"
-#include "BehaviorTreeComponent.h"
+#include "BehaviorTree/BehaviorTreeComponent.h"
 
 TEST_BASE(BehaviorTreeComponentTestBase)
 {

@@ -4,8 +4,8 @@
 #include <vector>
 #include "DMEUtilities.h"
 #include "DMEComponentParser.h"
-#include "FiniteStateMachineParser.h"
-#include "DecisionTreeParser.h"
+#include "FiniteStateMachine/FiniteStateMachineParser.h"
+#include "DecisionTree/DecisionTreeParser.h"
 
 
 class DMEManager

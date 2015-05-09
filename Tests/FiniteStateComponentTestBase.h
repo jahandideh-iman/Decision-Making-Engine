@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CppUTest/TestHarness.h"
-#include "FiniteStateMachineComponent.h"
+#include "FiniteStateMachine/FiniteStateMachineComponent.h"
 
 TEST_BASE(FiniteStateComponentTestBase)
 {

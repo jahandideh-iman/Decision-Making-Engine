@@ -1,7 +1,7 @@
 #include "CppUTest/TestHarness.h"
-#include "DecisionTreeComponent.h"
-#include "ActionNode.h"
-#include "DecisionNode.h"
+#include "DecisionTree/DecisionTreeComponent.h"
+#include "DecisionTree/ActionNode.h"
+#include "DecisionTree/DecisionNode.h"
 
 
 

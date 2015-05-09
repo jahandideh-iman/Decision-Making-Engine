@@ -1,10 +1,10 @@
 #include "CppUTest/TestHarness.h"
-#include "DMEManager.h"
-#include "DecisionTreeComponent.h"
-#include "FiniteStateMachineComponent.h"
-#include "DMEComponent.h"
+#include "Core/DMEManager.h"
+#include "DecisionTree/DecisionTreeComponent.h"
+#include "FiniteStateMachine/FiniteStateMachineComponent.h"
+#include "Core/DMEComponent.h"
 #include <sstream>
-#include "DMEUtilities.h"
+#include "Core/DMEUtilities.h"
 
 
 class DMEComponentUpdateCounterSpy : public DMEComponent

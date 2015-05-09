@@ -1,5 +1,5 @@
 #include "CppUTest/TestHarness.h"
-#include "GoalOrientedComponent.h"
+#include "GoalOriented/GoalOrientedComponent.h"
 
 TEST_GROUP(GoalOrientedComponent)
 {

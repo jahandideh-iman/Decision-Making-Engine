@@ -1,8 +1,8 @@
 #pragma once
-#include "DMEComponent.h"
-#include "BehaviorTask.h"
-#include "DMEDefines.h"
-#include "TaskMethod.h"
+#include "Core/DMEComponent.h"
+#include "BehaviorTree/BehaviorTask.h"
+#include "Core/DMEDefines.h"
+#include "BehaviorTree/TaskMethod.h"
 #include <map>
 
 

@@ -1,5 +1,5 @@
 #include "GoalOrientedComponent.h"
-#include "DMEUtilities.h"
+#include "Core/DMEUtilities.h"
 
 
 GoalOrientedComponent::GoalOrientedComponent()

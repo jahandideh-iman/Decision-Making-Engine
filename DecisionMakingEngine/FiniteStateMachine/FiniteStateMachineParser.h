@@ -3,8 +3,8 @@
 #include <iostream>
 #include "rapidxml-1.13/rapidxml.hpp"
 #include "FiniteStateMachineComponent.h"
-#include "DMEUtilities.h"
-#include "DMEComponentParser.h"
+#include "Core/DMEUtilities.h"
+#include "Core/DMEComponentParser.h"
 using namespace rapidxml;
 using namespace std;
 

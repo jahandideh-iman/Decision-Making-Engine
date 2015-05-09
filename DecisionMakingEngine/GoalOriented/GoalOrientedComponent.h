@@ -1,5 +1,5 @@
 #pragma once
-#include "DMEComponent.h"
+#include "Core/DMEComponent.h"
 #include "Goal.h"
 #include <vector>
 

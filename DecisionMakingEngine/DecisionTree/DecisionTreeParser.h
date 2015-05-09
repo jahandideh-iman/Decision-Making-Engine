@@ -5,8 +5,8 @@
 #include "DecisionTreeComponent.h"
 #include "ActionNode.h"
 #include "DecisionNode.h"
-#include "DMEUtilities.h"
-#include "DMEComponentParser.h"
+#include "Core/DMEUtilities.h"
+#include "Core/DMEComponentParser.h"
 
 using namespace rapidxml;
 

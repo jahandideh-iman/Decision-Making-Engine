@@ -1,11 +1,11 @@
 #pragma once
 
 #include <map>
-#include "DMEComponent.h"
-#include "DMEDefines.h"
-#include "DMEUtilities.h"
-#include "Condition.h"
-#include "EveryUpdateCalledAction.h"
+#include "Core/DMEComponent.h"
+#include "Core/DMEDefines.h"
+#include "Core/DMEUtilities.h"
+#include "Core/Condition.h"
+#include "Core/EveryUpdateCalledAction.h"
 
 using DME::ActionName;
 using DME::EveryUpdateCalledAction;

@@ -3,13 +3,13 @@
 #include <map>
 #include <string>
 #include <vector>
-#include "DMEComponent.h"
-#include "DMEDefines.h"
-#include "DMEUtilities.h"
-#include "Action.h"
-#include "OneTimeCalledAction.h"
-#include "EveryUpdateCalledAction.h"
-#include "Condition.h"
+#include "Core/DMEComponent.h"
+#include "Core/DMEDefines.h"
+#include "Core/DMEUtilities.h"
+#include "Core/Action.h"
+#include "Core/OneTimeCalledAction.h"
+#include "Core/EveryUpdateCalledAction.h"
+#include "Core/Condition.h"
 
 using std::map;
 using std::string;

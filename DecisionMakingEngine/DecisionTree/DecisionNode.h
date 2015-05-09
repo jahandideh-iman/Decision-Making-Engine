@@ -1,9 +1,9 @@
 #pragma once
 #include "DecisionTreeNode.h"
 
-#include "DMEDefines.h"
-#include "DMEUtilities.h"
-#include "Condition.h"
+#include "Core/DMEDefines.h"
+#include "Core/DMEUtilities.h"
+#include "Core/Condition.h"
  
 using DME::ConditionName;
 using DME::Condition;

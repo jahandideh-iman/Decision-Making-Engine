@@ -1,4 +1,4 @@
-#include "BehaviorTask.h"
+#include "BehaviorTree/BehaviorTask.h"
 
 class MockTask : public BehaviorTask
 {
