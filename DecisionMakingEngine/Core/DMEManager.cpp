@@ -79,4 +79,5 @@ void DMEManager::InitialDefaultParsers()
 {
 	parsers.push_back(new DecisionTreeParser());
 	parsers.push_back(new FiniteStateMachineParser());
+	parsers.push_back(new BehaviorTreeParser());
 }

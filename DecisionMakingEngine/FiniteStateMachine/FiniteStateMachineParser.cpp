@@ -3,15 +3,16 @@
 
 FiniteStateMachineParser::FiniteStateMachineParser()
 {
-	typeName = "FiniteStateMachine";
 }
-
 
 FiniteStateMachineParser::~FiniteStateMachineParser()
 {
 }
 
-
+std::string FiniteStateMachineParser::GetTypeName()
+{
+	return "FiniteStateMachine";
+}
 
 DMEComponent* FiniteStateMachineParser::CreateWithValidData(XMLNode* rootXMLNode)
 {

@@ -3,7 +3,6 @@
 
 DecisionTreeParser::DecisionTreeParser()
 {
-	typeName = "DecisionTree";
 }
 
 
@@ -11,6 +10,10 @@ DecisionTreeParser::~DecisionTreeParser()
 {
 }
 
+std::string DecisionTreeParser::GetTypeName()
+{
+	return "DecisionTree";
+}
 
 DMEComponent* DecisionTreeParser::CreateWithValidData(XMLNode* rootXMLNode)
 {
@@ -82,5 +85,3 @@ void DecisionTreeParser::ParseDecisionNodeFalsePathNode(DecisionNode* decisionNo
 	if (falsePathNode != nullptr)
 		decisionNode->SetFalsePathNode(ExtractNode(component, falsePathNode->first_node("Node")));
 }
-
-

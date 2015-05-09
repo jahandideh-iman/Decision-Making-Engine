@@ -26,6 +26,11 @@ void BehaviorTreeComponent::SetRoot(BehaviorTask *task)
 	root = task;
 }
 
+const BehaviorTask* BehaviorTreeComponent::GetRoot() const
+{
+	return root;
+}
+
 bool BehaviorTreeComponent::IsEmpty()
 {
 	return root == nullptr;

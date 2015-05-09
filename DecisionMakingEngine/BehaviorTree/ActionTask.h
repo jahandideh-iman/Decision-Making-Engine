@@ -16,6 +16,9 @@ public:
 	~ActionTask();
 
 	TaskResult ProcessTask(float dt) override;
+
+	void SetActionName(DME::ActionName name);
+	DME::ActionName GetActionName() const;
 	
 private:
 	DME::ActionName actionName;

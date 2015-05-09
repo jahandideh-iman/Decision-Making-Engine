@@ -39,7 +39,7 @@ bool DMEComponentParser::IsDataValid(XMLNode* rootXMLNode)
 bool DMEComponentParser::IsTypeMatched(XMLNode* rootXMLNode)
 {
 	XMLAttribute* typeAttr = rootXMLNode->first_attribute("type");
-	if (typeAttr != nullptr && strcmp(typeAttr->value(), typeName.c_str()) == 0)
+	if (typeAttr != nullptr && strcmp(typeAttr->value(), GetTypeName().c_str()) == 0)
 		return true;
 
 	return false;

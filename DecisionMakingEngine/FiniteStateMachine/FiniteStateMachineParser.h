@@ -19,6 +19,8 @@ protected:
 
 	DMEComponent* CreateWithValidData(XMLNode* rootXMLNode) override;
 
+	std::string GetTypeName() override;
+
 private:
 
 	void ParseStates(FiniteStateMachineComponent* component, XMLNode* rootXMLNode);

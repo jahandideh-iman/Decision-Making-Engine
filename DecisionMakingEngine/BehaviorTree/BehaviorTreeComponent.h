@@ -17,6 +17,7 @@ public:
 	void Update(float dt = 0) override;
 
 	void SetRoot(BehaviorTask *task);
+	const BehaviorTask* GetRoot() const;
 	bool IsEmpty();
 
 	void AddAction(DME::ActionName actionName);

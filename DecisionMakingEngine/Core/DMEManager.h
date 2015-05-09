@@ -6,6 +6,7 @@
 #include "DMEComponentParser.h"
 #include "FiniteStateMachine/FiniteStateMachineParser.h"
 #include "DecisionTree/DecisionTreeParser.h"
+#include "BehaviorTree/BehaviorTreeParser.h"
 
 
 class DMEManager

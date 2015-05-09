@@ -2,10 +2,12 @@
 #include "Core/DMEManager.h"
 #include "DecisionTree/DecisionTreeComponent.h"
 #include "FiniteStateMachine/FiniteStateMachineComponent.h"
+#include "BehaviorTree/BehaviorTreeComponent.h"
 #include "Core/DMEComponent.h"
 #include <sstream>
 #include "Core/DMEUtilities.h"
 
+#define CHECK_COMPONENT_TYPE(comp, CType) CHECK_TRUE(dynamic_cast<CType*>(comp)!= nullptr);
 
 class DMEComponentUpdateCounterSpy : public DMEComponent
 {
@@ -140,9 +142,7 @@ TEST(DMEManager, CreateDecisionTreeComponentOnValidInput)
 		"<DMEComponent  type=\"DecisionTree\" >"
 		"</DMEComponent>"));
 
-	DecisionTreeComponent* decisionTreeComp = dynamic_cast<DecisionTreeComponent*> (parsedComponent);
-
-	CHECK_TRUE(decisionTreeComp != nullptr);
+	CHECK_COMPONENT_TYPE(parsedComponent, DecisionTreeComponent);
 }
 
 TEST(DMEManager, CreateFiniteStateMachineComponentOnValidInput)
@@ -151,8 +151,15 @@ TEST(DMEManager, CreateFiniteStateMachineComponentOnValidInput)
 		"<DMEComponent  type=\"FiniteStateMachine\" >"
 		"</DMEComponent>"));
 
-	FiniteStateMachineComponent* finiteStateMachineComp = dynamic_cast<FiniteStateMachineComponent*> (parsedComponent);
+	CHECK_COMPONENT_TYPE(parsedComponent, FiniteStateMachineComponent);
+}
 
-	CHECK_TRUE(finiteStateMachineComp != nullptr);
+TEST(DMEManager, CreateBehaviorTreeComponentOnValidInput)
+{
+	parsedComponent = DMEManager::Get()->CreateComponent(CreateStream(
+		"<DMEComponent  type=\"BehaviorTree\" >"
+		"</DMEComponent>"));
+
+	CHECK_COMPONENT_TYPE(parsedComponent, BehaviorTreeComponent);
 }
 

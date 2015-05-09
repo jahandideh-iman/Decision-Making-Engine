@@ -20,6 +20,7 @@ public:
 protected:
 	DMEComponent* CreateWithValidData(XMLNode* rootXMLNode) override;
 
+	std::string GetTypeName() override;
 private:
 	DecisionTreeNode* ExtractNode(DecisionTreeComponent* component, XMLNode* xmlNode);
 	std::string GetNodeType(XMLNode* xmlNode);

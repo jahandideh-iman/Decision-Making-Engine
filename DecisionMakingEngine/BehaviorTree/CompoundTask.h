@@ -9,6 +9,9 @@ public:
 	virtual ~CompoundTask();
 
 	void AddTask(BehaviorTask * task);
+
+	//Note: This function is only for testing
+	const BehaviorTask * GetChild(int index);
 	
 protected:
 	void RestartTasksIndex();

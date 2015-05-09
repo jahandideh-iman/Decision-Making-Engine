@@ -44,7 +44,8 @@ public:
 protected:
 	virtual DMEComponent* CreateWithValidData(XMLNode* rootXMLNode) = 0;
 
-	std::string typeName = "";
+	virtual std::string GetTypeName() = 0;
+
 private:
 	XMLNode* GetRootXMLNode(char* rawData);
 
