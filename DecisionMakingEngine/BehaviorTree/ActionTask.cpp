@@ -1,11 +1,12 @@
 #include "ActionTask.h"
 #include "BehaviorTreeComponent.h"
 
+using TaskResult = Task::TaskResult;
 
 ActionTask::ActionTask(BehaviorTreeComponent* owner, DME::ActionName actionName)
 {
 	this->owner = owner;
-	SetActionName(actionName);
+	SetTaskName(actionName);
 }
 
 
@@ -16,18 +17,18 @@ ActionTask::~ActionTask()
 
 TaskResult ActionTask::ProcessTask(float dt)
 {
-	if (actionName == "")
+	if (taskName == "")
 		return TaskResult::None;
 
-	return owner->GetActionMethod(actionName)->Invoke(dt);
+	return owner->GetTask(taskName)->Invoke(dt);
 }
 
-void ActionTask::SetActionName(DME::ActionName name)
+void ActionTask::SetTaskName(DME::ActionName name)
 {
-	this->actionName = name;
+	this->taskName = name;
 }
 
-DME::ActionName ActionTask::GetActionName() const
+DME::ActionName ActionTask::GetTaskName() const
 {
-	return actionName;
+	return taskName;
 }

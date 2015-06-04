@@ -1,15 +1,13 @@
 #pragma once
 #include "Core/DMEComponent.h"
-#include "BehaviorTree/BehaviorTask.h"
 #include "Core/DMEDefines.h"
-#include "BehaviorTree/TaskMethod.h"
-#include <map>
+#include "BehaviorTree/Task.h"
 
+class BehaviorTask;
 
 class BehaviorTreeComponent :
 	public DMEComponent
 {
-	typedef std::map<DME::ActionName, TaskMethod*> ActionContainer;
 public:
 	BehaviorTreeComponent();
 	~BehaviorTreeComponent();
@@ -20,12 +18,10 @@ public:
 	const BehaviorTask* GetRoot() const;
 	bool IsEmpty();
 
-	void AddAction(DME::ActionName actionName);
-	void SetActionMethod(DME::ActionName actionName, TaskMethod* action);
-	const TaskMethod* GetActionMethod(DME::ActionName actionName) const;
+	void AddEmptyTask(DME::TaskName name);
+	void SetTask(DME::TaskName name, Task* task);
+	const Task* GetTask(DME::TaskName name) const;
 private:
 	BehaviorTask *root = nullptr;
 
-	ActionContainer actions;
 };
-

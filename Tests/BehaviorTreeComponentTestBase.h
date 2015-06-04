@@ -3,6 +3,8 @@
 #include "CppUTest/TestHarness.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 
+using TaskResult = Task::TaskResult;
+
 TEST_BASE(BehaviorTreeComponentTestBase)
 {
 public:

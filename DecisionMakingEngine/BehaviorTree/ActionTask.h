@@ -10,18 +10,17 @@ class BehaviorTreeComponent;
 class ActionTask :
 	public BehaviorTask
 {
-	typedef std::function<TaskResult(float)> Action;
 public:
-	ActionTask(BehaviorTreeComponent* owner, DME::ActionName actioName = "");
+	ActionTask(BehaviorTreeComponent* owner, DME::TaskName taskName = "");
 	~ActionTask();
 
-	TaskResult ProcessTask(float dt) override;
+	Task::TaskResult ProcessTask(float dt) override;
 
-	void SetActionName(DME::ActionName name);
-	DME::ActionName GetActionName() const;
+	void SetTaskName(DME::TaskName name);
+	DME::ActionName GetTaskName() const;
 	
 private:
-	DME::ActionName actionName;
+	DME::TaskName taskName;
 	BehaviorTreeComponent* owner = nullptr;
 };
 

@@ -1,11 +1,10 @@
 #pragma once
 
-enum TaskResult
-{
-	None, Unfinished, Success, Failure,
-};
+#include "Task.h"
 
-class BehaviorTask
+using TaskResult = Task::TaskResult;
+
+class BehaviorTask 
 {
 
 public:

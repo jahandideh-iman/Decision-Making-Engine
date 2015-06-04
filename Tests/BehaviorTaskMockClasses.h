@@ -1,5 +1,7 @@
 #include "BehaviorTree/BehaviorTask.h"
 
+using TaskResult = Task::TaskResult;
+
 class MockTask : public BehaviorTask
 {
 public:

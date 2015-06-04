@@ -1,6 +1,6 @@
 #include "BehaviorTreeComponent.h"
-#include <cassert>
 #include "Core/DMEUtilities.h"
+#include "BehaviorTask.h"
 
 using namespace DME;
 
@@ -8,11 +8,9 @@ BehaviorTreeComponent::BehaviorTreeComponent()
 {
 }
 
-
 BehaviorTreeComponent::~BehaviorTreeComponent()
 {
 	SAFE_DELETE(root);
-	DELETE_MAP_CONTAINER(actions);
 }
 
 void BehaviorTreeComponent::Update(float dt)
@@ -36,19 +34,18 @@ bool BehaviorTreeComponent::IsEmpty()
 	return root == nullptr;
 }
 
-void BehaviorTreeComponent::AddAction(ActionName actionName)
+void BehaviorTreeComponent::AddEmptyTask(TaskName name)
 {
-	actions.emplace(actionName, nullptr);
+	AddEmptyInterface(name);
 }
 
-void BehaviorTreeComponent::SetActionMethod(ActionName actionName, TaskMethod* action)
+void BehaviorTreeComponent::SetTask(TaskName name, Task* task)
 {
-	actions[actionName] = action;
+	SetInterface(name, task);
 }
 
-const TaskMethod* BehaviorTreeComponent::GetActionMethod(ActionName actionName) const
+const Task* BehaviorTreeComponent::GetTask(TaskName name) const
 {
-	assert(actions.find(actionName) != actions.end());
-	return actions.find(actionName)->second;
+	return dynamic_cast<const Task *> (GetInterface(name));
 }
 

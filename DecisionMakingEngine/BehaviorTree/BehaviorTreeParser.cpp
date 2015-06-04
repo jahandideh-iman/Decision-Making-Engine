@@ -55,7 +55,7 @@ BehaviorTask* BehaviorTreeParser::ExtractActionTask(BehaviorTreeComponent* compo
 	auto actionTask = new ActionTask(component);
 	XMLNode* actionXMLNode = xmlNode->first_node("Action");
 	if (actionXMLNode != nullptr)
-		actionTask->SetActionName(actionXMLNode->value());
+		actionTask->SetTaskName(actionXMLNode->value());
 	return actionTask;
 }
 

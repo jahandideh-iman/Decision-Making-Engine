@@ -9,8 +9,8 @@ TEST(ActionTask, IsCallOnUpdate)
 {
 	unsigned callCount = 0u;
 	auto task = new ActionTask(component,"ActionName");
-	component->AddAction("ActionName");
-	component->SetActionMethod("ActionName", new TaskMethod([&](float dt)->TaskResult{++callCount; return TaskResult::Success; }));
+	component->AddEmptyTask("ActionName");
+	component->SetTask("ActionName", new Task([&](float dt)->TaskResult{++callCount; return TaskResult::Success; }));
 
 	component->SetRoot(task);
 

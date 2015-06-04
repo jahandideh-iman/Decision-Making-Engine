@@ -22,7 +22,7 @@ TEST_GROUP(BehaviorTreeParser)
 	void CheckActionTask(DME::ActionName expectedActionName, const BehaviorTask* task)
 	{
 		CHECK_TRUE(dynamic_cast<const ActionTask*>(task) != nullptr);
-		CHECK_TRUE(dynamic_cast<const ActionTask*>(task)->GetActionName() == expectedActionName);
+		CHECK_TRUE(dynamic_cast<const ActionTask*>(task)->GetTaskName() == expectedActionName);
 	}
 
 	void CheckSequenceTask(const BehaviorTask* task)
