@@ -34,7 +34,7 @@ TEST(FiniteStateComponentWithMultipleStates, CurrentStateIsTheInitialStateOnFirs
 
 TEST(FiniteStateComponentWithMultipleStates, StateIsNotChangedWhenTransitionConditionIsNotMet)
 {
-	SetTransition(firstStateName, secondStateName, "ConditionOne" ,new Condition([]()->bool{return false; }));
+	SetTransition(firstStateName, secondStateName, "ConditionOne", InterfaceFactory::CreateCondition([]()->bool{return false; }));
 
 	//On first Update component will go to initial state
 	component->Update();
@@ -46,7 +46,7 @@ TEST(FiniteStateComponentWithMultipleStates, StateIsNotChangedWhenTransitionCond
 
 TEST(FiniteStateComponentWithMultipleStates, StateIsChangedWhenTransitionConditionIsMet)
 {
-	SetTransition(firstStateName, secondStateName,"ConditionOne" ,new Condition([]()->bool{return true; }));
+	SetTransition(firstStateName, secondStateName, "ConditionOne", InterfaceFactory::CreateCondition([]()->bool{return true; }));
 
 	//On first Update component will go to initial state
 	component->Update();
@@ -57,7 +57,7 @@ TEST(FiniteStateComponentWithMultipleStates, StateIsChangedWhenTransitionConditi
 
 TEST(FiniteStateComponentWithMultipleStates, StateIsSetToInitialStateOnFirstUpdate)
 {
-	SetTransition(firstStateName, secondStateName, "ConditionOne", new Condition([]()->bool{return true; }));
+	SetTransition(firstStateName, secondStateName, "ConditionOne", InterfaceFactory::CreateCondition([]()->bool{return true; }));
 
 	//On first Update component will go to initial state
 	component->Update();
@@ -66,7 +66,7 @@ TEST(FiniteStateComponentWithMultipleStates, StateIsSetToInitialStateOnFirstUpda
 
 TEST(FiniteStateComponentWithMultipleStates, StateIsNotChangedAfterTransition)
 {
-	SetTransition(firstStateName, secondStateName, "ConditionOne", new Condition([]()->bool{return true; }));
+	SetTransition(firstStateName, secondStateName, "ConditionOne", InterfaceFactory::CreateCondition([]()->bool{return true; }));
 
 	//On first Update component will go to initial state
 	component->Update();
@@ -79,8 +79,8 @@ TEST(FiniteStateComponentWithMultipleStates, EntryActionForDestinationIsCalledOn
 {
 	bool isExecuted = false;
 
-	SetTransition(firstStateName, secondStateName, "ConditionOne", new Condition([]()->bool{return true; }));
-	SetStateEntryAction(secondStateName, "SecondEntryAction" , new OneTimeCalledAction([&]()->void{isExecuted = true; }));
+	SetTransition(firstStateName, secondStateName, "ConditionOne", InterfaceFactory::CreateCondition([]()->bool{return true; }));
+	SetStateEntryAction(secondStateName, "SecondEntryAction", InterfaceFactory::CreateAction([&]()->void{isExecuted = true; }));
 
 	//On first Update component will go to initial state
 	component->Update();
@@ -93,8 +93,8 @@ TEST(FiniteStateComponentWithMultipleStates, ExistActionForSourceIsCalledOnState
 {
 	bool isExecuted = false;
 
-	SetTransition(firstStateName, secondStateName, "ConditionOne", new Condition([]()->bool{return true; }));
-	SetStateExitAction(firstStateName, "FirstExitAction" ,new OneTimeCalledAction([&]()->void{isExecuted = true; }));
+	SetTransition(firstStateName, secondStateName, "ConditionOne", InterfaceFactory::CreateCondition([]()->bool{return true; }));
+	SetStateExitAction(firstStateName, "FirstExitAction", InterfaceFactory::CreateAction([&]()->void{isExecuted = true; }));
 
 	//On first Update component will go to initial state
 	component->Update();
@@ -107,8 +107,8 @@ TEST(FiniteStateComponentWithMultipleStates, UpdateActionIsCallOnEachUpdateAfter
 {
 	auto callCount = 0u;
 
-	SetTransition(firstStateName, secondStateName, "ConditionOne", new Condition([]()->bool{return true; }));
-	SetStateUpdateAction(secondStateName, "SecondUpdateAction", new EveryUpdateCalledAction([&](float dt)->void{++callCount; }));
+	SetTransition(firstStateName, secondStateName, "ConditionOne", InterfaceFactory::CreateCondition([]()->bool{return true; }));
+	SetStateUpdateAction(secondStateName, "SecondUpdateAction", InterfaceFactory::CreateUpdateAction([&](float dt)->void{++callCount; }));
 
 	//On first Update component will go to initial state
 	component->Update();

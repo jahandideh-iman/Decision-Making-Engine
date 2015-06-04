@@ -14,7 +14,7 @@ namespace DME
 		EveryUpdateCalledAction(Method method);
 		~EveryUpdateCalledAction();
 
-		void Invoke(float dt) const;
+		void Invoke(float dt) const override;
 	private:
 		Method method = nullptr;
 	};

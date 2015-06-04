@@ -3,7 +3,7 @@
 
 #include "Core/DMEDefines.h"
 #include "Core/DMEUtilities.h"
-#include "Core/Condition.h"
+#include "Core/Interfaces/Condition.h"
  
 using DME::ConditionName;
 using DME::Condition;

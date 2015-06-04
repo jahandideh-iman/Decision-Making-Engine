@@ -12,7 +12,7 @@ OneTimeCalledAction::~OneTimeCalledAction()
 {
 }
 
-void OneTimeCalledAction::Invoke()
+void OneTimeCalledAction::Invoke(float /*dt*/) const
 {
 	if (method != nullptr)
 		method();

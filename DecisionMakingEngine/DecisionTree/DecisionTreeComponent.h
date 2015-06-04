@@ -1,23 +1,25 @@
 #pragma once
 
-#include <map>
+
 #include "Core/DMEComponent.h"
 #include "Core/DMEDefines.h"
-#include "Core/DMEUtilities.h"
-#include "Core/Condition.h"
-#include "Core/EveryUpdateCalledAction.h"
+
+
+namespace DME
+{
+	class Condition;
+	class Action;
+}
 
 using DME::ActionName;
-using DME::EveryUpdateCalledAction;
 using DME::ConditionName;
+using DME::Action;
 using DME::Condition;
 
 class DecisionTreeNode;
 
 class DecisionTreeComponent : public DMEComponent
 {
-	typedef std::map<ActionName, EveryUpdateCalledAction*> ActionContainer;
-	typedef std::map<ConditionName, Condition*> ConditionContainer;
 
 public:
 	DecisionTreeComponent(DecisionTreeNode* root = nullptr);
@@ -29,8 +31,8 @@ public:
 	const DecisionTreeNode* GetRoot() const; 
 
 	void AddAction(ActionName actionName);
-	void SetActionMethod(ActionName actionName, EveryUpdateCalledAction* action);
-	const EveryUpdateCalledAction* GetActionMethod(ActionName actionName) const;
+	void SetActionMethod(ActionName actionName, Action* action);
+	const Action* GetActionMethod(ActionName actionName) const;
 
 	void AddCondition(ConditionName conditionName);	
 	void SetConditionMethod(ConditionName conditionName, Condition* condition);
@@ -40,8 +42,5 @@ public:
 
 private:
 	DecisionTreeNode* root = nullptr;
-
-	ActionContainer actions;
-	ConditionContainer conditions;
 };
 

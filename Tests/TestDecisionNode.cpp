@@ -1,6 +1,10 @@
 #include "CppUTest/TestHarness.h"
 #include "DecisionTree/DecisionNode.h"
 
+#include "Core/InterfaceFactory.h"
+
+using DME::InterfaceFactory;
+
 class DecisionTreeNodeDeltaTimeSpy : public DecisionTreeNode
 {
 public:
@@ -43,7 +47,7 @@ TEST_GROUP(DecisionNode)
 TEST(DecisionNode, DeltaTimeIsPropagatedToTruePathChild)
 {
 	DecisionTreeNodeDeltaTimeSpy* truePathNodeSpy = new DecisionTreeNodeDeltaTimeSpy;
-	comp->SetConditionMethod("Condition",new Condition([]()->bool{return true; }));
+	comp->SetConditionMethod("Condition", InterfaceFactory::CreateCondition([]()->bool{return true; }));
 	decisionNode->SetTruePathNode(truePathNodeSpy);
 				
 	decisionNode->ProcessNode(0.5);
@@ -54,7 +58,7 @@ TEST(DecisionNode, DeltaTimeIsPropagatedToTruePathChild)
 TEST(DecisionNode, DeltaTimeIsPropagatedToFalsePathChild)
 {
 	DecisionTreeNodeDeltaTimeSpy* falsePathNodeSpy = new DecisionTreeNodeDeltaTimeSpy;
-	comp->SetConditionMethod("Condition", new Condition([]()->bool{return false; }));
+	comp->SetConditionMethod("Condition", InterfaceFactory::CreateCondition([]()->bool{return false; }));
 	decisionNode->SetFalsePathNode(falsePathNodeSpy);
 
 	decisionNode->ProcessNode(0.5);

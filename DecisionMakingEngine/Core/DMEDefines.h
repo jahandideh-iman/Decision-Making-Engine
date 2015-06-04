@@ -6,8 +6,9 @@
 
 namespace DME
 {
-	typedef std::string StateName;
-	typedef std::string ActionName;
-	typedef std::string ConditionName;
+	typedef std::string InterfaceName;
+	typedef InterfaceName ActionName;
+	typedef InterfaceName ConditionName;
 
+	typedef std::string StateName;
 }

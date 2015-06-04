@@ -1,4 +1,5 @@
 #include "ActionNode.h"
+#include "Core/Interfaces/Action.h"
 
 
 ActionNode::ActionNode(DecisionTreeComponent* owner, ActionName actionName) : DecisionTreeNode(owner)

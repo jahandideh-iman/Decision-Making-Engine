@@ -1,7 +1,8 @@
 #include "DecisionTreeComponent.h"
-//TODO: Find out why I can't include this in the header file
 #include "DecisionTreeNode.h"
-#include <assert.h>
+#include "Core/Interfaces/Action.h"
+#include "Core/Interfaces/Condition.h"
+#include "Core/DMEUtilities.h"
 
 DecisionTreeComponent::DecisionTreeComponent(DecisionTreeNode* root)
 {
@@ -12,8 +13,6 @@ DecisionTreeComponent::DecisionTreeComponent(DecisionTreeNode* root)
 DecisionTreeComponent::~DecisionTreeComponent()
 {
 	SAFE_DELETE(root);
-	DELETE_MAP_CONTAINER(actions);
-	DELETE_MAP_CONTAINER(conditions);
 }
 
 bool DecisionTreeComponent::IsEmpty() const
@@ -38,33 +37,31 @@ void DecisionTreeComponent::Update(float dt)
 
 void DecisionTreeComponent::AddAction(ActionName actionName)
 {
-	actions.emplace(actionName, nullptr);
+	AddEmptyInterface(actionName);
 }
 
-void DecisionTreeComponent::SetActionMethod(ActionName actionName, EveryUpdateCalledAction* action)
+void DecisionTreeComponent::SetActionMethod(ActionName actionName, Action* action)
 {
-	actions[actionName] = action;
+	SetInterface(actionName, action);
 }
 
-const EveryUpdateCalledAction* DecisionTreeComponent::GetActionMethod(ActionName actionName) const
+const Action* DecisionTreeComponent::GetActionMethod(ActionName actionName) const
 {
-	assert(actions.find(actionName) != actions.end());
-	return actions.find(actionName)->second;
+	return dynamic_cast<const Action *> (GetInterface(actionName));
 }
 
 void DecisionTreeComponent::AddCondition(ConditionName conditionName)
 {
-	conditions[conditionName] = nullptr;
+	AddEmptyInterface(conditionName);
 }
 
 void DecisionTreeComponent::SetConditionMethod(ConditionName conditionName, Condition* condition)
 {
-	conditions[conditionName] = condition;
+	SetInterface(conditionName, condition);
 }
 
 const Condition* DecisionTreeComponent::GetConditionMethod(ConditionName conditionName) const
 {
-	assert(conditions.find(conditionName) != conditions.end());
-	return conditions.find(conditionName)->second;
+	return dynamic_cast<const Condition *> (GetInterface(conditionName));
 }
 

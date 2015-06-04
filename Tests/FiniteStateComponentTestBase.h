@@ -3,6 +3,10 @@
 #include "CppUTest/TestHarness.h"
 #include "FiniteStateMachine/FiniteStateMachineComponent.h"
 
+#include "Core/InterfaceFactory.h"
+
+using DME::InterfaceFactory;
+
 TEST_BASE(FiniteStateComponentTestBase)
 {
 public:
@@ -31,21 +35,21 @@ public:
 			component->Update();
 	}
 
-	void SetStateEntryAction(StateName stateName, ActionName actionName, DME::OneTimeCalledAction* action)
+	void SetStateEntryAction(StateName stateName, ActionName actionName, DME::Action* action)
 	{
 		component->AddAction(actionName);
 		component->SetActionMethod(actionName, action);
 		component->SetStateEntryAction(stateName, actionName);
 	}
 
-	void SetStateUpdateAction(StateName stateName, ActionName actionName, DME::EveryUpdateCalledAction* action)
+	void SetStateUpdateAction(StateName stateName, ActionName actionName, DME::Action* action)
 	{
 		component->AddAction(actionName);
 		component->SetActionMethod(actionName, action);
 		component->SetStateUpdateAction(stateName, actionName);
 	}
 
-	void SetStateExitAction(StateName stateName, ActionName actionName, DME::OneTimeCalledAction* action)
+	void SetStateExitAction(StateName stateName, ActionName actionName, DME::Action* action)
 	{
 		component->AddAction(actionName);
 		component->SetActionMethod(actionName, action);

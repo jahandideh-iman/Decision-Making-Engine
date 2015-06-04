@@ -6,10 +6,10 @@
 #include "Core/DMEComponent.h"
 #include "Core/DMEDefines.h"
 #include "Core/DMEUtilities.h"
-#include "Core/Action.h"
-#include "Core/OneTimeCalledAction.h"
-#include "Core/EveryUpdateCalledAction.h"
-#include "Core/Condition.h"
+#include "Core/Interfaces/Action.h"
+#include "Core/Interfaces/OneTimeCalledAction.h"
+#include "Core/Interfaces/EveryUpdateCalledAction.h"
+#include "Core/Interfaces/Condition.h"
 
 using std::map;
 using std::string;

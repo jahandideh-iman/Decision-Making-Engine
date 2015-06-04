@@ -73,7 +73,7 @@ void FiniteStateMachineComponent::CallExitActionFor(State* state)
 			DME::Action* action = actions[state->exitActionName];
 			if (dynamic_cast<OneTimeCalledAction*> (action) != nullptr)
 			{
-				dynamic_cast<OneTimeCalledAction*> (action)->Invoke();
+				dynamic_cast<OneTimeCalledAction*> (action)->Invoke(0);
 			}
 		}
 	}
@@ -88,7 +88,7 @@ void FiniteStateMachineComponent::CallEntryActionFor(State* state)
 			DME::Action* action = actions[state->entryActionName];
 			if (dynamic_cast<OneTimeCalledAction*> (action) != nullptr)
 			{
-				dynamic_cast<OneTimeCalledAction*> (action)->Invoke();
+				dynamic_cast<OneTimeCalledAction*> (action)->Invoke(0);
 			}
 		}
 

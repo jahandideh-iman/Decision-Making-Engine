@@ -1,10 +1,11 @@
 #pragma once
 
 #include <functional>
+#include "GameInterface.h"
 
 namespace DME
 {
-	class Condition
+	class Condition : public GameInterface
 	{
 		typedef std::function<bool()> Method;
 

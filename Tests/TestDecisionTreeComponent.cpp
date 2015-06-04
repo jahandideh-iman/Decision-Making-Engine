@@ -3,6 +3,9 @@
 #include "DecisionTree/ActionNode.h"
 #include "DecisionTree/DecisionNode.h"
 
+#include "COre/InterfaceFactory.h"
+
+using DME::InterfaceFactory;
 
 
 class DecisionNodeDeltaTimeSpy : public DecisionNode
@@ -40,7 +43,7 @@ TEST_GROUP(DecisionTreeComponent)
 			decisionTreeComponent->Update();
 	}
 
-	ActionNode* CreateActionNode(ActionName actionName, EveryUpdateCalledAction* action)
+	ActionNode* CreateActionNode(ActionName actionName, Action* action)
 	{
 		decisionTreeComponent->SetActionMethod(actionName, action);
 		return new ActionNode(decisionTreeComponent, actionName);
@@ -70,7 +73,7 @@ TEST(DecisionTreeComponent, IsNotEmptyAfterSettingRoot)
 TEST(DecisionTreeComponent, RootIsExecutedOnUpdateIfItIsAnActionNode)
 {
 	auto callCount = 0u;
-	ActionNode* actionNode = CreateActionNode("ArbitraryName", new EveryUpdateCalledAction([&](float dt)->void{++callCount; }));
+	ActionNode* actionNode = CreateActionNode("ArbitraryName", InterfaceFactory::CreateUpdateAction([&](float dt)->void{++callCount; }));
 	decisionTreeComponent->SetRoot(actionNode);
 
 	CallMultipleUpdate(5);
@@ -82,8 +85,8 @@ TEST(DecisionTreeComponent, TruePathIsExecutedOnUpdateIfNodeConditionIsMet)
 {
 	auto callCount = 0u;
 
-	ActionNode* truePathNode = CreateActionNode("ArbitraryActionName", new EveryUpdateCalledAction([&](float dt)->void{++callCount; }));
-	DecisionNode* decisionNode = CreateDecisionNode("ArbitraryConditionName", new Condition([]()->bool{return true; }), truePathNode);
+	ActionNode* truePathNode = CreateActionNode("ArbitraryActionName", InterfaceFactory::CreateUpdateAction([&](float dt)->void{++callCount; }));
+	DecisionNode* decisionNode = CreateDecisionNode("ArbitraryConditionName", InterfaceFactory::CreateCondition([]()->bool{return true; }), truePathNode);
 	decisionTreeComponent->SetRoot(decisionNode);
 
 	CallMultipleUpdate(5);
@@ -95,8 +98,8 @@ TEST(DecisionTreeComponent, FalsePathIsExecutedOnUpdateIfNodeConditionIsNotMet)
 {
 	auto callCount = 0u;
 
-	ActionNode* falsePathNode = CreateActionNode("ArbitraryActionName", new EveryUpdateCalledAction([&](float dt)->void{++callCount; }));
-	DecisionNode* decisionNode = CreateDecisionNode("ArbitraryConditionName", new Condition([]()->bool{return false; }), nullptr, falsePathNode);
+	ActionNode* falsePathNode = CreateActionNode("ArbitraryActionName", InterfaceFactory::CreateUpdateAction([&](float dt)->void{++callCount; }));
+	DecisionNode* decisionNode = CreateDecisionNode("ArbitraryConditionName", InterfaceFactory::CreateCondition([]()->bool{return false; }), nullptr, falsePathNode);
 	decisionTreeComponent->SetRoot(decisionNode);
 
 	CallMultipleUpdate(5);
@@ -117,9 +120,9 @@ TEST(DecisionTreeComponent, DeltaTimeIsPropagatedToDecisionNode)
 TEST(DecisionTreeComponent, IntegerationTest)
 {
 	auto callCount = 0u;
-	ActionNode* actionNode = CreateActionNode("ArbitraryActionName", new EveryUpdateCalledAction([&](float dt)->void{++callCount; }));
-	DecisionNode* secondDecisionNode = CreateDecisionNode("ConditionOne", new Condition([]()->bool{return false; }), nullptr, actionNode);
-	DecisionNode* firstDecisionNode = CreateDecisionNode("ConditionTwo", new Condition([]()->bool{return true; }), secondDecisionNode, nullptr);
+	ActionNode* actionNode = CreateActionNode("ArbitraryActionName", InterfaceFactory::CreateUpdateAction([&](float dt)->void{++callCount; }));
+	DecisionNode* secondDecisionNode = CreateDecisionNode("ConditionOne", InterfaceFactory::CreateCondition([]()->bool{return false; }), nullptr, actionNode);
+	DecisionNode* firstDecisionNode = CreateDecisionNode("ConditionTwo", InterfaceFactory::CreateCondition([]()->bool{return true; }), secondDecisionNode, nullptr);
 	decisionTreeComponent->SetRoot(firstDecisionNode);
 
 	CallMultipleUpdate(5);

@@ -22,7 +22,7 @@ void CompoundTask::RestartTasksIndex()
 	currentTaskIndex = 0u;
 }
 
-const BehaviorTask * CompoundTask::GetChild(int index)
+const BehaviorTask * CompoundTask::GetChild(unsigned index)
 {
 	if (index < tasks.size())
 		return tasks[index];

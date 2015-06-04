@@ -11,7 +11,7 @@ public:
 	void AddTask(BehaviorTask * task);
 
 	//Note: This function is only for testing
-	const BehaviorTask * GetChild(int index);
+	const BehaviorTask * GetChild(unsigned index);
 	
 protected:
 	void RestartTasksIndex();

@@ -1,9 +1,9 @@
 #pragma once
 
 #include "cocos2d.h"
-#include "FiniteStateMachineComponent.h"
-#include "DMEUtilities.h"
-#include "DMEManager.h"
+#include "FiniteStateMachine/FiniteStateMachineComponent.h"
+#include "Core/DMEUtilities.h"
+#include "Core/DMEManager.h"
 #include "Player.h"
 
 using namespace cocos2d;

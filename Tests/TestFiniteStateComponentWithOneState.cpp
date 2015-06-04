@@ -68,7 +68,7 @@ TEST(FiniteStateComponentWithOneState, EntryActionIsExecutedOnFirstUpdate)
 {
 	bool isExecuted = false;
 	AddStateAndSetInitialState(theOnlyStateName);
-	SetStateEntryAction(theOnlyStateName, "EntryActionName", new OneTimeCalledAction([&]()->void{isExecuted = true; }));
+	SetStateEntryAction(theOnlyStateName, "EntryActionName", InterfaceFactory::CreateAction([&]()->void{isExecuted = true; }));
 
 	component->Update();
 
@@ -80,7 +80,7 @@ TEST(FiniteStateComponentWithOneState, EntryActionIsExecutedOnlyOnce)
 	auto actionCallCount = 0u;
 
 	AddStateAndSetInitialState(theOnlyStateName);
-	SetStateEntryAction(theOnlyStateName, "EntryActionName", new OneTimeCalledAction([&]()->void{ ++actionCallCount; }));
+	SetStateEntryAction(theOnlyStateName, "EntryActionName", InterfaceFactory::CreateAction([&]()->void{ ++actionCallCount; }));
 
 	CallMultipleUpdate(5);
 
@@ -92,7 +92,7 @@ TEST(FiniteStateComponentWithOneState, UpdateActionIsExecutedOnEachUpdate)
 	auto actionCallCount = 0u;
 
 	AddStateAndSetInitialState(theOnlyStateName);
-	SetStateUpdateAction(theOnlyStateName, "UpdateActionName", new EveryUpdateCalledAction([&](float dt)->void{ ++actionCallCount; }));
+	SetStateUpdateAction(theOnlyStateName, "UpdateActionName", InterfaceFactory::CreateUpdateAction([&](float dt)->void{ ++actionCallCount; }));
 
 	CallMultipleUpdate(4);
 
@@ -103,9 +103,10 @@ TEST(FiniteStateComponentWithOneState, AcceptMemberFunctionForAction)
 {
 	GameObjectMock object;
 	AddStateAndSetInitialState(theOnlyStateName);
-	SetStateEntryAction(theOnlyStateName, "EntryActionName", new OneTimeCalledAction(BIND_MEMBER_ACTION(GameObjectMock::EntryAction, &object)));
+	SetStateEntryAction(theOnlyStateName, "EntryActionName", InterfaceFactory::CreateAction(BIND_MEMBER_ACTION(GameObjectMock::EntryAction, &object)));
 
 	component->Update();
 
 	CHECK_TRUE(object.isEntryActionCalled);
 }
+

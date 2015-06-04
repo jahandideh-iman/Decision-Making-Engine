@@ -14,7 +14,7 @@ namespace DME
 		OneTimeCalledAction(Method method);
 		~OneTimeCalledAction();
 
-		void Invoke();
+		void Invoke(float dt) const override;
 	private:
 		Method method = nullptr;
 	};
