@@ -5,7 +5,7 @@
 
 #include "Core/InterfaceFactory.h"
 
-using DME::InterfaceFactory;
+using namespace DME;
 
 TEST_BASE(FiniteStateComponentTestBase)
 {

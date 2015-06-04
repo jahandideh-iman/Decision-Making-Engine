@@ -3,6 +3,8 @@
 #include "FiniteStateMachine/FiniteStateMachineComponent.h"
 #include "FiniteStateComponentTestBase.h"
 
+using DME::StateName;
+
 TEST_GROUP_BASE(FiniteStateComponentWithMultipleStates, FiniteStateComponentTestBase)
 {
 

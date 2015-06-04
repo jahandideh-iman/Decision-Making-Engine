@@ -11,6 +11,7 @@ using namespace std;
 
 class FiniteStateMachineParser: public DMEComponentParser
 {
+	using StateName = DME::StateName;
 public:
 	FiniteStateMachineParser();
 	~FiniteStateMachineParser();

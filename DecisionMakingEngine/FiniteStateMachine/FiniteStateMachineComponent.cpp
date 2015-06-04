@@ -1,5 +1,18 @@
 #include "FiniteStateMachineComponent.h"
 
+#include "Core/Interfaces/Condition.h"
+#include "Core/Interfaces/Action.h"
+#include "Core/DMEUtilities.h"
+
+using std::map;
+using std::string;
+
+using DME::Condition;
+using DME::Action;
+using DME::ActionName;
+using DME::ConditionName;
+using DME::StateName;
+
 
 FiniteStateMachineComponent::FiniteStateMachineComponent()
 {
@@ -7,19 +20,15 @@ FiniteStateMachineComponent::FiniteStateMachineComponent()
 	currentState = nullptr;
 }
 
-
 FiniteStateMachineComponent::~FiniteStateMachineComponent()
 {
 	DELETE_MAP_CONTAINER(states);
-	DELETE_MAP_CONTAINER(actions);
-	DELETE_MAP_CONTAINER(conditions);
 }
 
 void FiniteStateMachineComponent::AddState(StateName stateName)
 {
 	states.emplace(stateName,  new State(stateName));
 }
-
 
 const FiniteStateMachineComponent::State* FiniteStateMachineComponent::GetState(StateName stateName) const
 {
@@ -36,6 +45,7 @@ bool FiniteStateMachineComponent::IsTheFirstUpdate()
 {
 	return currentState == nullptr;
 }
+
 void FiniteStateMachineComponent::ProcessCurrentStateTransitions()
 {
 	if (IsTheFirstUpdate())
@@ -46,7 +56,7 @@ void FiniteStateMachineComponent::ProcessCurrentStateTransitions()
 		
 	for (const StateTransition& t : currentState->transitions)
 	{
-		if (conditions[t.conditionName]->GetResult() == true)
+		if (GetCondition(t.conditionName)->GetResult() == true)
 		{
 			GoToState(t.destinationState);
 			return;
@@ -70,11 +80,9 @@ void FiniteStateMachineComponent::CallExitActionFor(State* state)
 	{
 		if (state->exitActionName != "")
 		{
-			DME::Action* action = actions[state->exitActionName];
-			if (dynamic_cast<OneTimeCalledAction*> (action) != nullptr)
-			{
-				dynamic_cast<OneTimeCalledAction*> (action)->Invoke(0);
-			}
+			auto action = GetAction(state->exitActionName);
+			//TODO: Check for nullptr
+			action->Invoke(0);
 		}
 	}
 }
@@ -85,13 +93,10 @@ void FiniteStateMachineComponent::CallEntryActionFor(State* state)
 	{
 		if (state->entryActionName != "")
 		{
-			DME::Action* action = actions[state->entryActionName];
-			if (dynamic_cast<OneTimeCalledAction*> (action) != nullptr)
-			{
-				dynamic_cast<OneTimeCalledAction*> (action)->Invoke(0);
-			}
+			auto action = GetAction(state->entryActionName);
+			//TODO: Check for nullptr
+			action->Invoke(0);
 		}
-
 	}
 }
 
@@ -101,11 +106,9 @@ void FiniteStateMachineComponent::CallUpdateActionFor(State* state,float dt)
 	{
 		if (state->updateActionName != "")
 		{
-			DME::Action* action = actions[state->updateActionName];
-			if (dynamic_cast<EveryUpdateCalledAction*> (action) != nullptr)
-			{
-				dynamic_cast<EveryUpdateCalledAction*> (action)->Invoke(dt);
-			}
+			auto action = GetAction(state->updateActionName);
+			//TODO: Check for nullptr
+			action->Invoke(dt);
 		}
 	}
 }
@@ -151,7 +154,7 @@ void FiniteStateMachineComponent::SetInitialState(StateName stateName)
 
 void FiniteStateMachineComponent::AddCondition(ConditionName conditionName)
 {
-	conditions[conditionName] = nullptr;
+	AddEmptyInterface(conditionName);
 }
 
 void FiniteStateMachineComponent::AddTransition(StateName from, StateName to, ConditionName conditionName)
@@ -161,17 +164,17 @@ void FiniteStateMachineComponent::AddTransition(StateName from, StateName to, Co
 
 void FiniteStateMachineComponent::SetConditionMethod(ConditionName conditionName, Condition* condition)
 {
-	conditions[conditionName] = condition;
+	SetInterface(conditionName, condition);
 }
 
 void FiniteStateMachineComponent::SetActionMethod(ActionName actionName, DME::Action* action)
 {
-	actions[actionName] = action;
+	SetInterface(actionName, action);
 }
 
 void FiniteStateMachineComponent::AddAction(ActionName actionName)
 {
-	actions[actionName] = nullptr;
+	AddEmptyInterface(actionName);
 }
 
 
@@ -180,9 +183,12 @@ StateName FiniteStateMachineComponent::GetInitialStateName() const
 	return initialStateName;
 }
 
+const Action * FiniteStateMachineComponent::GetAction(ActionName name)
+{
+	return dynamic_cast<const Action *> (GetInterface(name));
+}
 
-
-
-
-
-
+const Condition * FiniteStateMachineComponent::GetCondition(ConditionName name)
+{
+	return dynamic_cast<const Condition *> (GetInterface(name));
+}

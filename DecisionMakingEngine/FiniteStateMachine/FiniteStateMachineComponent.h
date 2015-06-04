@@ -5,31 +5,28 @@
 #include <vector>
 #include "Core/DMEComponent.h"
 #include "Core/DMEDefines.h"
-#include "Core/DMEUtilities.h"
-#include "Core/Interfaces/Action.h"
-#include "Core/Interfaces/OneTimeCalledAction.h"
-#include "Core/Interfaces/EveryUpdateCalledAction.h"
-#include "Core/Interfaces/Condition.h"
 
-using std::map;
-using std::string;
 
-using DME::Condition;
+namespace DME
+{
+	class Action;
+	class Condition;
+}
 
-using DME::ActionName;
-using DME::ConditionName;
-using DME::StateName;
-
-using DME::OneTimeCalledAction;
-using DME::EveryUpdateCalledAction;
 
 class FiniteStateMachineComponent : public DMEComponent
 {
+	using ConditionName = DME::ConditionName;
+	using ActionName = DME::ActionName;
+	using Action = DME::Action;
+	using ConditionName = DME::ConditionName;
+	using Condition = DME::Condition;
 
-public:
+	using StateName = DME::StateName;
 
 	struct State;
 
+public:
 	struct StateTransition
 	{
 		StateTransition(State* destination, ConditionName condition)
@@ -61,10 +58,7 @@ public:
 		std::vector<StateTransition> transitions;
 	};
 
-
-	typedef map<StateName, State*> StateContainer;
-	typedef map<ActionName, DME::Action*> ActionContainer;
-	typedef map<ConditionName, Condition*> ConditionContainer;
+	typedef std::map<StateName, State*> StateContainer;
 
 public:
 	FiniteStateMachineComponent();
@@ -102,13 +96,14 @@ private:
 	void CallEntryActionFor(State* state);
 	void CallUpdateActionFor(State* state, float dt);
 
+	const Action *GetAction(ActionName name);
+	const Condition *GetCondition(ConditionName name);
+
 	bool IsTheFirstUpdate();
 
 private:
 
 	StateContainer states;
-	ConditionContainer conditions;
-	ActionContainer actions;
 
 	State* currentState;
 	StateName initialStateName;
