@@ -1,5 +1,8 @@
 #include "DecisionTreeEnemey.h"
 
+#include "Factories\InterfaceFactory.h"
+
+using DME::InterfaceFactory;
 
 DecisionTreeEnemey::DecisionTreeEnemey()
 {
@@ -29,9 +32,9 @@ void DecisionTreeEnemey::Initial(Player* player)
 {
 	DecisionTreeComponent * comp = (DecisionTreeComponent*)DMEManager::Get()->CreateComponentFromFile("DTEnemy.txt");
 
-	comp->SetActionMethod("FollowPlayer", new DME::EveryUpdateCalledAction(BIND_MEMBER_UPDATE_ACTION(DecisionTreeEnemey::FollowPlayer, this)));
-	comp->SetActionMethod("SearchForPlayer", new DME::EveryUpdateCalledAction(BIND_MEMBER_UPDATE_ACTION(DecisionTreeEnemey::SearchForPlayer, this)));
-	comp->SetConditionMethod("IsPlayerInRange", new DME::Condition(BIND_MEMBER_ACTION(DecisionTreeEnemey::IsPlayerInRange, this)));
+	comp->SetActionMethod("FollowPlayer", InterfaceFactory::CreateUpdateAction(BIND_MEMBER_UPDATE_ACTION(DecisionTreeEnemey::FollowPlayer, this)));
+	comp->SetActionMethod("SearchForPlayer", InterfaceFactory::CreateUpdateAction(BIND_MEMBER_UPDATE_ACTION(DecisionTreeEnemey::SearchForPlayer, this)));
+	comp->SetConditionMethod("IsPlayerInRange", InterfaceFactory::CreateCondition(BIND_MEMBER_ACTION(DecisionTreeEnemey::IsPlayerInRange, this)));
 
 	DMEManager::Get()->AddComponent(comp);
 	this->player = player;

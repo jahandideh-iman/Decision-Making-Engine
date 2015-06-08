@@ -3,7 +3,7 @@
 #include "CppUTest/TestHarness.h"
 #include "FiniteStateMachine/FiniteStateMachineComponent.h"
 
-#include "Core/InterfaceFactory.h"
+#include "Factories/InterfaceFactory.h"
 
 using namespace DME;
 

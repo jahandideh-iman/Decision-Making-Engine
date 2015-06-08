@@ -1,6 +1,10 @@
 #include "DMEManager.h"
 #include <fstream>
 
+#include "FiniteStateMachine/FiniteStateMachineParser.h"
+#include "DecisionTree/DecisionTreeParser.h"
+#include "BehaviorTree/BehaviorTreeParser.h"
+
 DMEManager* DMEManager::manager = nullptr;
 
 DMEManager::DMEManager()
@@ -46,7 +50,6 @@ bool DMEManager::IsEmpty() const
 
 DMEComponent* DMEManager::CreateComponentFromFile(std::string fileName)
 {
-
 	std::ifstream file;
 	FileGuard fg(file);
 	file.open(fileName);

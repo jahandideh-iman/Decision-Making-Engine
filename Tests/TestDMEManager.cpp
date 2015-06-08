@@ -69,8 +69,7 @@ TEST_GROUP(DMEManager)
 		SAFE_DELETE(parsedComponent);
 	}
 
-
-	std::istream& CreateStream(string input)
+	std::istream& CreateStream(std::string input)
 	{
 		tempBuf = new std::stringbuf(input);
 		tempIStream = new std::istream(tempBuf);

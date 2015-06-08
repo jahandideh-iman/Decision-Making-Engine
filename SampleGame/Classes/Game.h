@@ -2,9 +2,13 @@
 
 #include "cocos2d.h"
 #include "Player.h"
-#include "DMEManager.h"
+#include "Core/DMEManager.h"
 #include "FSMEnemy.h"
 #include "DecisionTreeEnemey.h"
+#include "BehaviorTreeAgent.h"
+#include "Door.h"
+#include "Key.h"
+#include "Room.h"
 
 using namespace cocos2d;
 
@@ -13,10 +17,16 @@ static void ScaleSpriteToDesignSize(CCSprite* sprite)
 	CCSize designSize = CCDirector::sharedDirector()->getOpenGLView()->getDesignResolutionSize();
 	sprite->setScaleX(designSize.width / sprite->getContentSize().width);
 	sprite->setScaleY(designSize.height / sprite->getContentSize().height);
-}
+};
 
 class Game: public cocos2d::Layer
 {
+public:
+
+	static Door *door;
+	static Key *key;
+	static Room *room;
+
 public:
 	Game();
 	~Game();
@@ -34,14 +44,22 @@ public:
 
 private:
 	void InitialPlayer(Size &visibleSize, Vec2 &origin);
-	void InitialEnemies(Size &visibleSize, Vec2 &origin);
+	void InitialEnemies();
 
 	void InititalBackground(Size &visibleSize, Vec2 &origin);
 	void InitialKeyboardListener();
+
+	void InitialBehaviorTree();
 
 private:
 	Player* player = nullptr;
 	FSMEnemy* fsmEnemy = nullptr;
 	DecisionTreeEnemey* daEnemey = nullptr;
+
+	BehaviorTreeAgent * BTAgent = nullptr;
+
+	Size visibleSize;
+	Vec2 origin;
+
 };
 

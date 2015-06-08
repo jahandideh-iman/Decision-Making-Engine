@@ -1,6 +1,10 @@
 #include "Game.h"
 
 
+Door* Game::door = nullptr;
+Key* Game::key = nullptr;
+Room* Game::room = nullptr;
+
 Game::Game()
 {
 }
@@ -32,14 +36,16 @@ bool Game::init()
 		return false;
 	}
 
-	Size visibleSize = Director::getInstance()->getVisibleSize();
-	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+	visibleSize = Director::getInstance()->getVisibleSize();
+	origin = Director::getInstance()->getVisibleOrigin();
 
 	this->schedule(schedule_selector(Game::update));
 
 	InititalBackground(visibleSize, origin);
 	InitialPlayer(visibleSize, origin);
-	InitialEnemies(visibleSize, origin);
+	InitialEnemies();
+
+	InitialBehaviorTree();
 
 	//NOTE: This must be after player initialization
 	InitialKeyboardListener();
@@ -132,18 +138,38 @@ void Game::InitialPlayer(Size &visibleSize, Vec2 &origin)
 	this->addChild(player,50);
 }
 
-void Game::InitialEnemies(Size &visibleSize, Vec2 &origin)
+void Game::InitialEnemies()
 {
-	fsmEnemy = FSMEnemy::Create(Vec2( 0.2 * visibleSize.width , visibleSize.height / 2 + origin.y), player);
+	/*fsmEnemy = FSMEnemy::Create(Vec2( 0.2 * visibleSize.width , visibleSize.height / 2 + origin.y), player);
 	this->addChild(fsmEnemy);
 
 	daEnemey = DecisionTreeEnemey::Create(Vec2(0.8 * visibleSize.width, visibleSize.height / 2 + origin.y), player);
 	this->addChild(daEnemey);
+*/
+	
 }
 
 void Game::update(float dt)
 {
 	DMEManager::Get()->Update(dt);
+}
+
+void Game::InitialBehaviorTree()
+{
+	BTAgent = BehaviorTreeAgent::Create(Vec2(0.8 * visibleSize.width, 0.55 * visibleSize.height / 2 + origin.y));
+	this->addChild(BTAgent);
+
+	door = Door::Create(Vec2(0.8 * visibleSize.width, 0.6 * visibleSize.height  + origin.y));
+	this->addChild(door);
+
+	key = new Key(Vec2(0.2 * visibleSize.width, 0.2 * visibleSize.height + origin.y));
+	this->addChild(key);
+
+	room = new Room(Vec2(0.8 * visibleSize.width, 0.8 * visibleSize.height + origin.y));
+	this->addChild(room);
+
+	door->isOpen = false;
+	door->isUnlockable = true;
 }
 
 

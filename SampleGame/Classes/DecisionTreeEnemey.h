@@ -2,11 +2,9 @@
 
 #include "cocos2d.h"
 #include "Player.h"
-#include "DecisionTreeComponent.h"
-#include "DMEUtilities.h"
-#include "ActionNode.h"
-#include "DecisionNode.h"
-#include "DMEManager.h"
+#include "DecisionTree/DecisionTreeComponent.h"
+#include "Core/DMEUtilities.h"
+#include "Core/DMEManager.h"
 
 using namespace cocos2d;
 

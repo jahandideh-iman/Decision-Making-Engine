@@ -4,15 +4,11 @@
 #include <vector>
 #include "DMEUtilities.h"
 #include "DMEComponentParser.h"
-#include "FiniteStateMachine/FiniteStateMachineParser.h"
-#include "DecisionTree/DecisionTreeParser.h"
-#include "BehaviorTree/BehaviorTreeParser.h"
-
 
 class DMEManager
 {
-	typedef vector<DMEComponent*> ComponentContainer;
-	typedef vector<DMEComponentParser*> ParserContainer;
+	typedef std::vector<DMEComponent*> ComponentContainer;
+	typedef std::vector<DMEComponentParser*> ParserContainer;
 
 public:
 	static DMEManager* Get();

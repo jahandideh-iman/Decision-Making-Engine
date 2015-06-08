@@ -1,0 +1,57 @@
+<DMEComponent type="BehaviorTree" >
+	<Task type="SequenceTask" XPos="501" YPos="168"  > 
+		<Child>
+			<Task type="ActionTask" XPos="322" YPos="281" > 
+				<Action>MoveToDoor</Action> 
+			</Task> 
+		</Child>
+		<Child>
+			<Task type="SelectorTask" XPos="494" YPos="319"  > 
+				<Child>
+					<Task type="ActionTask" XPos="371" YPos="422" > 
+						<Action>IsDoorOpen</Action> 
+					</Task> 
+				</Child>
+				<Child>
+					<Task type="SequenceTask" XPos="495" YPos="422"  > 
+						<Child>
+							<Task type="ActionTask" XPos="392" YPos="580" > 
+								<Action>IsDoorUnlockable</Action> 
+							</Task> 
+						</Child>
+						<Child>
+							<Task type="ActionTask" XPos="486" YPos="578" > 
+								<Action>GetTheKey</Action> 
+							</Task> 
+						</Child>
+						<Child>
+							<Task type="ActionTask" XPos="571" YPos="563" > 
+								<Action>MoveToDoor</Action> 
+							</Task> 
+						</Child>
+						<Child>
+							<Task type="ActionTask" XPos="671" YPos="581" > 
+								<Action>UnlockDoor</Action> 
+							</Task> 
+						</Child>
+					</Task> 
+				</Child>
+				<Child>
+					<Task type="ActionTask" XPos="622" YPos="424" > 
+						<Action>BreakDoor</Action> 
+					</Task> 
+				</Child>
+			</Task> 
+		</Child>
+		<Child>
+			<Task type="ActionTask" XPos="602" YPos="273" > 
+				<Action>MoveToRoom</Action> 
+			</Task> 
+		</Child>
+		<Child>
+			<Task type="ActionTask" XPos="749" YPos="274" > 
+				<Action>Stop</Action> 
+			</Task> 
+		</Child>
+	</Task> 
+</DMEComponent>

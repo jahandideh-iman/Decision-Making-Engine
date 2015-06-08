@@ -31,8 +31,8 @@ public:
 	const DecisionTreeNode* GetRoot() const; 
 
 	void AddAction(ActionName actionName);
-	void SetActionMethod(ActionName actionName, Action* action);
-	const Action* GetActionMethod(ActionName actionName) const;
+	void SetActionMethod(ActionName actionName, DME::Action* action);
+	const DME::Action* GetActionMethod(ActionName actionName) const;
 
 	void AddCondition(ConditionName conditionName);	
 	void SetConditionMethod(ConditionName conditionName, Condition* condition);

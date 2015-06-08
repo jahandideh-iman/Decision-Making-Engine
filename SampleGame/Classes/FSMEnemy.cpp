@@ -1,6 +1,10 @@
 #include "FSMEnemy.h"
 #include <iostream>
 
+#include "Factories/InterfaceFactory.h"
+
+using DME::InterfaceFactory;
+
 
 FSMEnemy::FSMEnemy()
 {
@@ -31,11 +35,11 @@ void FSMEnemy::Initial(Player* player)
 
 	FiniteStateMachineComponent* comp = (FiniteStateMachineComponent*) DMEManager::Get()->CreateComponentFromFile("FSMEnemy.txt");
 
-	comp->SetActionMethod("SearchForPlayer", new EveryUpdateCalledAction(BIND_MEMBER_UPDATE_ACTION(FSMEnemy::SearchForPlayer, this)));
-	comp->SetActionMethod("FollowPlayer", new EveryUpdateCalledAction(BIND_MEMBER_UPDATE_ACTION(FSMEnemy::FollowPlayer, this)));
+	comp->SetActionMethod("SearchForPlayer", InterfaceFactory::CreateUpdateAction(BIND_MEMBER_UPDATE_ACTION(FSMEnemy::SearchForPlayer, this)));
+	comp->SetActionMethod("FollowPlayer", InterfaceFactory::CreateUpdateAction(BIND_MEMBER_UPDATE_ACTION(FSMEnemy::FollowPlayer, this)));
 
-	comp->SetConditionMethod("IsPlayerInRange", new Condition(BIND_MEMBER_ACTION(FSMEnemy::IsPlayerInRange, this)));
-	comp->SetConditionMethod("IsPlayerOutOfRange", new Condition(BIND_MEMBER_ACTION(FSMEnemy::IsPlayerOutOfRange, this)));
+	comp->SetConditionMethod("IsPlayerInRange", InterfaceFactory::CreateCondition(BIND_MEMBER_ACTION(FSMEnemy::IsPlayerInRange, this)));
+	comp->SetConditionMethod("IsPlayerOutOfRange", InterfaceFactory::CreateCondition(BIND_MEMBER_ACTION(FSMEnemy::IsPlayerOutOfRange, this)));
 
 	DMEManager::Get()->AddComponent(comp);
 

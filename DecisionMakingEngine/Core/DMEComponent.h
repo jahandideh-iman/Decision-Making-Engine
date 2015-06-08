@@ -18,7 +18,7 @@ public:
 
 protected:
 	void AddEmptyInterface(InterfaceName name);
-	void SetInterface(InterfaceName name, GameInterface *interface);
+	void SetInterface(InterfaceName name, GameInterface *_interface);
 	const GameInterface* GetInterface(InterfaceName name) const;
 
 private:

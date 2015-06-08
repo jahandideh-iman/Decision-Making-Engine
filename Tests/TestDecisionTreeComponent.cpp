@@ -3,7 +3,7 @@
 #include "DecisionTree/ActionNode.h"
 #include "DecisionTree/DecisionNode.h"
 
-#include "COre/InterfaceFactory.h"
+#include "Factories/InterfaceFactory.h"
 
 using DME::InterfaceFactory;
 
